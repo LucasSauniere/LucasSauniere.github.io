@@ -1,22 +1,22 @@
 var addressPoints = [
   [
-    "Talk 1 on Relevant Topic in Your Field<br />UC San Francisco, Department of Testing; San Francisco, CA, USA",
-    37.7879363,
-    -122.4075201
+    "Euclid France Meeting 2023<br />Euclid France Meeting; Lyon, France",
+    45.7578137,
+    4.8320114
   ],
   [
-    "Conference Proceeding talk 3 on Relevant Topic in Your Field<br />Testing Institute of America 2014 Annual Conference; Los Angeles, CA, USA",
-    34.0536909,
-    -118.242766
+    "Decoding optical aberrations of low-resolution instruments from PSFs: machine learning and Zernike polynomials perspectives<br />SPIE Astronomical Telescopes + Instrumentation 2024; Yokohama, Japan",
+    35.4503381,
+    139.6343802
   ],
   [
-    "Talk 2 on Relevant Topic in Your Field<br />London School of Testing; London, UK",
-    51.5074456,
-    -0.1277653
+    "Euclid Consortium Meeting 2023<br />Euclid Consortium Meeting; Copenhagen, Denmark",
+    55.6867243,
+    12.5700724
   ],
   [
-    "Tutorial 1 on Relevant Topic in Your Field<br />UC-Berkeley Institute for Testing Science; Berkeley, CA, USA",
-    37.8708393,
-    -122.272863
+    "Dark Energy Colloquium 2022<br />Dark Energy Colloquium; Marseille, France",
+    43.2961743,
+    5.3699525
   ]
 ];
