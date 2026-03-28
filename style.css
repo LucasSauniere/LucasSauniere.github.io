@@ -1,0 +1,79 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  line-height: 1.6;
+}
+a { color: inherit; text-decoration: none; }
+
+/* Navigation */
+.site-header {
+  position: sticky; top: 0;
+  background: #fff;
+  border-bottom: 1px solid #ebebeb;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 1.5rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-size: 1rem; font-weight: 500; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-size: 0.88rem; color: #777; transition: color 0.15s; }
+.nav-links a:hover, .nav-links a.active { color: #111; }
+
+.menu-btn {
+  display: none; background: none; border: none;
+  font-size: 0.88rem; color: #777; cursor: pointer; font-family: inherit;
+}
+.mobile-nav {
+  display: none; flex-direction: column;
+  padding: 1rem 1.5rem 1.25rem;
+  border-top: 1px solid #ebebeb; gap: 1rem;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a { font-size: 0.88rem; color: #777; }
+
+/* Layout */
+main { max-width: 900px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+
+/* Home */
+.hero { margin-bottom: 5rem; }
+.hero h1 { font-size: 2.4rem; font-weight: 500; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+.hero .role { font-size: 1rem; color: #555; margin-bottom: 0.2rem; }
+.hero .institute { font-size: 0.9rem; color: #999; }
+.contact h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.25rem; }
+.contact address {
+  font-style: normal; font-size: 0.88rem;
+  color: #666; line-height: 2;
+}
+.contact address strong { display: block; color: #111; font-weight: 500; margin-bottom: 0.1rem; }
+.contact address a { border-bottom: 1px solid #ccc; transition: border-color 0.15s; }
+.contact address a:hover { border-color: #111; }
+
+/* Generic pages */
+.page-title { font-size: 2rem; font-weight: 500; letter-spacing: -0.03em; margin-bottom: 2rem; }
+.page-body p { font-size: 0.9rem; color: #555; line-height: 1.9; max-width: 660px; margin-bottom: 1.25rem; }
+.research-subtitle { font-size: 0.9rem; color: #aaa; margin-top: -1.5rem; margin-bottom: 2.25rem; }
+
+/* Papers */
+.papers-list { list-style: none; }
+.paper { padding: 1.5rem 0; border-top: 1px solid #ebebeb; }
+.paper:last-child { border-bottom: 1px solid #ebebeb; }
+.paper-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; }
+.paper-authors { font-size: 0.83rem; color: #777; margin-bottom: 0.2rem; }
+.paper-venue { font-size: 0.8rem; color: #aaa; font-style: italic; margin-bottom: 0.5rem; }
+.paper-link { font-size: 0.8rem; color: #666; border-bottom: 1px solid #ccc; transition: color 0.15s, border-color 0.15s; }
+.paper-link:hover { color: #111; border-color: #111; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .menu-btn  { display: block; }
+  .hero h1   { font-size: 1.8rem; }
+  main       { padding: 2.5rem 1.25rem 4rem; }
+}

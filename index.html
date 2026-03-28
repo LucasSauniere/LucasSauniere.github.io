@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucas Sauniere</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <span class="nav-logo"><a href="index.html">Lucas Sauniere</a></span>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="papers.html">Papers</a></li>
+      </ul>
+      <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Open Menu</button>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Me</a>
+      <a href="research.html">Research</a>
+      <a href="papers.html">Papers</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>Lucas Sauniere</h1>
+      <p class="role">PhD student at [Your University]</p>
+      <p class="institute">[Your Institute]</p>
+    </section>
+    <section class="contact">
+      <h2>Contact</h2>
+      <address>
+        <strong>Lucas Sauniere</strong>
+        [Your Institute], [City]<br />
+        Office [XX]<br />
+        [Street Address]<br />
+        [City, Postcode]<br />
+        [Country]<br /><br />
+        Email: <a href="mailto:your@email.com">your@email.com</a>
+      </address>
+    </section>
+  </main>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById('mobileNav');
+      const btn = document.getElementById('menuBtn');
+      btn.textContent = nav.classList.toggle('open') ? 'Close Menu' : 'Open Menu';
+    }
+  </script>
+</body>
+</html>
