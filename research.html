@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Research – Lucas Sauniere</title>
+  <title>Research – Lucas Saunière</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <span class="nav-logo"><a href="index.html">Lucas Sauniere</a></span>
+      <span class="nav-logo"><a href="index.html">Lucas Saunière</a></span>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About Me</a></li>
         <li><a href="research.html" class="active">Research</a></li>
         <li><a href="papers.html">Papers</a></li>
       </ul>
-      <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Open Menu</button>
+      <div class="nav-controls">
+        <button class="theme-btn" id="themeBtn" title="Toggle dark / light mode">🌙</button>
+        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Menu</button>
+      </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
       <a href="index.html">Home</a>
@@ -25,21 +28,79 @@
       <a href="papers.html">Papers</a>
     </nav>
   </header>
+
   <main>
-    <h1 class="page-title">[Your Project Name]</h1>
-    <p class="research-subtitle">[Short tagline or description]</p>
-    <div class="page-body">
-      <p>[Describe your main research project here. What problem are you solving?
-         What methods do you use? What are the key results so far?]</p>
-      <p>[More paragraphs describing the project, its motivation, and its potential impact.]</p>
-      <p>[Optional: link to code repository, datasets, or related publications.]</p>
+    <h1 class="page-title">Research</h1>
+    <p class="research-subtitle">Optics · Space Instrumentation · Machine Learning · Image Processing</p>
+
+    <div class="project-block">
+      <h2>DISPERS — PSF Modeling for Euclid NISP (PhD project, 2022–2025)</h2>
+      <p>
+        The <strong>DISPERS project</strong> at CPPM is dedicated to the characterization and modeling of the
+        instrumental response of the <strong>NISP (Near Infrared Spectrometer and Photometer)</strong>
+        instrument aboard the
+        <a href="https://www.esa.int/Science_Exploration/Space_Science/Euclid" target="_blank" rel="noopener" style="border-bottom:1px solid var(--link-ul)">Euclid space telescope</a>
+        (ESA, launched July 2023).
+      </p>
+      <p>
+        Euclid will map the large-scale structure of the universe over more than 15,000 square degrees of
+        sky to probe dark energy and dark matter. Accurate characterization of the instrument's
+        <strong>Point Spread Function (PSF)</strong> is critical for the scientific exploitation of its data.
+      </p>
+      <p>My contributions within DISPERS:</p>
+      <ul>
+        <li>Simulation and modeling of PSFs for the NISP instrument using optical models (Fourier optics)</li>
+        <li>Representation of wavefront aberrations using the <strong>Zernike polynomial basis</strong></li>
+        <li>Training of <strong>Convolutional Neural Networks (CNNs)</strong> to estimate Zernike coefficients directly from PSF images</li>
+        <li>Development of the <strong>Spread framework</strong> — a complete Python package for PSF-based aberration analysis (estimation + reconstruction)</li>
+        <li>Validation on real in-orbit NISP data during the Euclid commissioning phase</li>
+      </ul>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="project-block">
+      <h2>Computer Vision & Deep Learning</h2>
+      <p>
+        Beyond my main PhD research, I explore <strong>computer vision</strong> and <strong>deep learning</strong>
+        applied to various image analysis tasks: object detection & segmentation (YOLO, Faster R-CNN),
+        image classification via transfer learning, and generative models (VAEs, autoencoders). I also
+        apply deep learning to astronomical image analysis — light curve analysis and period detection for
+        exoplanet transits from Kepler/K2 and TESS data.
+      </p>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="project-block">
+      <h2>Wine Aging Prediction with MLPs</h2>
+      <p>
+        A personal side project applying <strong>multi-layer perceptrons (MLPs)</strong> to predict wine
+        quality and aging potential from physicochemical properties (acidity, alcohol, pH, sulphates, etc.).
+        This project sharpened my skills in data preprocessing, hyperparameter tuning, feature engineering,
+        and model interpretability (SHAP values).
+      </p>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="project-block">
+      <h2>Astronomy — IPSA VEGA Association</h2>
+      <p>
+        As Vice-President of the IPSA VEGA astronomy association, I led data reduction pipelines for
+        Kepler/K2 and TESS photometric data: aperture photometry, light curve detrending, Lomb–Scargle
+        periodograms, and asteroseismic analysis. I also authored articles for astronomy magazines and
+        taught astrophotography and astrophysics courses to association members.
+      </p>
     </div>
   </main>
+
+  <script src="theme.js"></script>
   <script>
     function toggleMenu() {
       const nav = document.getElementById('mobileNav');
       const btn = document.getElementById('menuBtn');
-      btn.textContent = nav.classList.toggle('open') ? 'Close Menu' : 'Open Menu';
+      btn.textContent = nav.classList.toggle('open') ? 'Close' : 'Menu';
     }
   </script>
 </body>

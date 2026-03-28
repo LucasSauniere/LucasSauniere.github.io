@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Me – Lucas Sauniere</title>
+  <title>About Me – Lucas Saunière</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <span class="nav-logo"><a href="index.html">Lucas Sauniere</a></span>
+      <span class="nav-logo"><a href="index.html">Lucas Saunière</a></span>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html" class="active">About Me</a></li>
         <li><a href="research.html">Research</a></li>
         <li><a href="papers.html">Papers</a></li>
       </ul>
-      <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Open Menu</button>
+      <div class="nav-controls">
+        <button class="theme-btn" id="themeBtn" title="Toggle dark / light mode">🌙</button>
+        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Menu</button>
+      </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
       <a href="index.html">Home</a>
@@ -25,22 +28,104 @@
       <a href="papers.html">Papers</a>
     </nav>
   </header>
+
   <main>
     <h1 class="page-title">About Me</h1>
     <div class="page-body">
-      <p>I am a PhD student at [Your University], based at [Your Institute].
-         My research focuses on [your research area].
-         I am supervised by [your supervisor's name].</p>
-      <p>Before starting my PhD, I completed my [degree] at [previous institution].
-         My work sits at the intersection of [field 1] and [field 2].</p>
-      <p>Outside of research, I enjoy [hobbies / interests].</p>
+      <p>
+        I am a <strong>Doctor in Optics, Photonics and Image Processing</strong>, having defended my PhD
+        thesis on January 29th, 2025, at the
+        <a href="https://www.cppm.in2p3.fr/" target="_blank" rel="noopener" style="border-bottom:1px solid var(--link-ul)">Centre de Physique des Particules de Marseille (CPPM)</a>,
+        France. My work sits at the intersection of <strong>optical instrumentation</strong>,
+        <strong>image processing</strong>, and <strong>machine learning</strong>, with a strong focus on
+        space science applications.
+      </p>
+      <p>
+        My PhD thesis focused on <strong>modeling the instrumental response of the
+        <a href="https://www.esa.int/Science_Exploration/Space_Science/Euclid" target="_blank" rel="noopener" style="border-bottom:1px solid var(--link-ul)">Euclid</a>
+        space telescope's NISP (Near-Infrared Spectrometer and Photometer) instrument</strong>, carried out
+        within the <strong>DISPERS project</strong> at CPPM. I developed novel methods combining
+        <strong>Zernike polynomial decomposition</strong> and <strong>deep learning</strong> (CNNs,
+        autoencoders) to characterize and reconstruct optical aberrations from Point Spread Functions (PSFs)
+        of low-resolution space instruments.
+      </p>
+
+      <h2>Research interests</h2>
+      <ul class="bullet-list">
+        <li>Optical systems & space instrumentation (telescopes, optronics)</li>
+        <li>Image processing & computational imaging</li>
+        <li>Machine learning and deep learning for scientific applications</li>
+        <li>Computer vision & remote sensing</li>
+        <li>Signal processing</li>
+      </ul>
+
+      <h2>Education</h2>
+      <ul class="bullet-list">
+        <li>
+          <strong>PhD in Optics, Optronics and Image Processing</strong> — CPPM, Marseille, 2022–2025<br />
+          <em>Thesis: Modeling the instrumental response of the Euclid NISP instrument</em><br />
+          Supervisors: W. Gillard, J. Zoubian
+        </li>
+        <li>
+          <strong>Master's Degree in Space Engineering</strong> (Space, Launchers & Satellites) —
+          IPSA, Paris, 2020–2022
+        </li>
+        <li>
+          <strong>CPGE MPSI/MP</strong> — Mathematics, Physics & Engineering Sciences, 2017–2019
+        </li>
+      </ul>
+
+      <h2>Work experience</h2>
+      <ul class="bullet-list">
+        <li>
+          <strong>Data Processing Engineer Intern</strong> — CNES (French Space Agency), 2022<br />
+          IASI-NG interferometer performance & spectral calibration algorithms aboard METOP-SG
+        </li>
+        <li>
+          <strong>Research Assistant</strong> — Observatory of Geneva, 2021<br />
+          Solar system dynamics — Mars ephemerides, Mars Express / ExoMars data analysis
+        </li>
+        <li>
+          <strong>Research Assistant</strong> — IRAP, Tarbes, 2020<br />
+          High-resolution spectropolarimetry of Beta Coronae Borealis with NEO-NARVAL
+        </li>
+      </ul>
+
+      <h2>Skills</h2>
+      <ul class="bullet-list">
+        <li><strong>Programming:</strong> Python, Jupyter, MATLAB / Simulink</li>
+        <li><strong>Deep learning:</strong> PyTorch, TensorFlow/Keras (CNNs, autoencoders, MLPs)</li>
+        <li><strong>Scientific computing:</strong> NumPy, SciPy, Astropy, scikit-learn, OpenCV</li>
+        <li><strong>CAD & FEA:</strong> CATIA V5, Patran/Nastran</li>
+        <li><strong>Languages:</strong> French (native), English (C1), Spanish (beginner)</li>
+      </ul>
+
+      <h2>Beyond research</h2>
+      <p>
+        I enjoy applying AI and machine learning to diverse and creative problems — from computer vision
+        pipelines to training MLPs to predict wine aging characteristics. I am also a passionate astronomer
+        and former <strong>Vice-President of the IPSA VEGA astronomy association</strong>, where I
+        contributed to data analysis from Kepler/K2 and TESS missions and taught astrophotography and
+        astrophysics to fellow students.
+      </p>
+
+      <h2>Looking for a postdoc</h2>
+      <p>
+        I am currently seeking a <strong>postdoc position in Canada or the United States</strong> in areas
+        related to optical systems, computational imaging, machine learning for science, or space
+        instrumentation. Feel free to
+        <a href="mailto:lucas.sauniere@ipsa.fr" style="border-bottom:1px solid var(--link-ul)">reach out</a>
+        — I would love to discuss opportunities!
+      </p>
     </div>
   </main>
+
+  <script src="theme.js"></script>
   <script>
     function toggleMenu() {
       const nav = document.getElementById('mobileNav');
       const btn = document.getElementById('menuBtn');
-      btn.textContent = nav.classList.toggle('open') ? 'Close Menu' : 'Open Menu';
+      btn.textContent = nav.classList.toggle('open') ? 'Close' : 'Menu';
     }
   </script>
 </body>

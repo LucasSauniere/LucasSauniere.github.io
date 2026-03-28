@@ -1,79 +1,196 @@
+/* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── CSS custom properties ── */
+:root {
+  --bg-card:    rgba(255, 255, 255, 0.91);
+  --bg-header:  rgba(255, 255, 255, 0.96);
+  --text:       #111;
+  --text-muted: #555;
+  --text-faint: #999;
+  --border:     #e8e8e8;
+  --link-ul:    #ccc;
+}
+[data-theme="dark"] {
+  --bg-card:    rgba(12, 12, 18, 0.91);
+  --bg-header:  rgba(8, 8, 14, 0.97);
+  --text:       #ececec;
+  --text-muted: #aaaaaa;
+  --text-faint: #666;
+  --border:     #2a2a36;
+  --link-ul:    #3a3a50;
+}
+
+/* ── Body / background ── */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  background: #fff;
-  color: #111;
+  color: var(--text);
   font-size: 16px;
   line-height: 1.6;
+  background-image: url('Background_hres.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #07070f;
+  min-height: 100vh;
+  transition: color 0.2s;
 }
 a { color: inherit; text-decoration: none; }
 
-/* Navigation */
+/* ── Navigation ── */
 .site-header {
   position: sticky; top: 0;
-  background: #fff;
-  border-bottom: 1px solid #ebebeb;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 100;
+  transition: background 0.2s, border-color 0.2s;
 }
 .nav-inner {
   max-width: 900px; margin: 0 auto;
   padding: 0 1.5rem; height: 60px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.nav-logo { font-size: 1rem; font-weight: 500; }
+.nav-logo a { font-size: 1rem; font-weight: 500; color: var(--text); transition: color 0.2s; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
-.nav-links a { font-size: 0.88rem; color: #777; transition: color 0.15s; }
-.nav-links a:hover, .nav-links a.active { color: #111; }
+.nav-links a { font-size: 0.88rem; color: var(--text-faint); transition: color 0.15s; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+/* ── Nav controls (theme toggle + mobile menu) ── */
+.nav-controls { display: flex; align-items: center; gap: 0.6rem; }
+.theme-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  width: 34px; height: 34px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--text-muted); }
 
 .menu-btn {
   display: none; background: none; border: none;
-  font-size: 0.88rem; color: #777; cursor: pointer; font-family: inherit;
+  font-size: 0.88rem; color: var(--text-faint); cursor: pointer; font-family: inherit;
 }
 .mobile-nav {
   display: none; flex-direction: column;
   padding: 1rem 1.5rem 1.25rem;
-  border-top: 1px solid #ebebeb; gap: 1rem;
+  border-top: 1px solid var(--border);
+  gap: 1rem;
+  background: var(--bg-header);
 }
 .mobile-nav.open { display: flex; }
-.mobile-nav a { font-size: 0.88rem; color: #777; }
+.mobile-nav a { font-size: 0.88rem; color: var(--text-faint); }
 
-/* Layout */
-main { max-width: 900px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
-
-/* Home */
-.hero { margin-bottom: 5rem; }
-.hero h1 { font-size: 2.4rem; font-weight: 500; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
-.hero .role { font-size: 1rem; color: #555; margin-bottom: 0.2rem; }
-.hero .institute { font-size: 0.9rem; color: #999; }
-.contact h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.25rem; }
-.contact address {
-  font-style: normal; font-size: 0.88rem;
-  color: #666; line-height: 2;
+/* ── Main content card ── */
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2.75rem 2rem 5rem;
+  background: var(--bg-card);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
 }
-.contact address strong { display: block; color: #111; font-weight: 500; margin-bottom: 0.1rem; }
-.contact address a { border-bottom: 1px solid #ccc; transition: border-color 0.15s; }
-.contact address a:hover { border-color: #111; }
 
-/* Generic pages */
-.page-title { font-size: 2rem; font-weight: 500; letter-spacing: -0.03em; margin-bottom: 2rem; }
-.page-body p { font-size: 0.9rem; color: #555; line-height: 1.9; max-width: 660px; margin-bottom: 1.25rem; }
-.research-subtitle { font-size: 0.9rem; color: #aaa; margin-top: -1.5rem; margin-bottom: 2.25rem; }
+/* ── Home – hero ── */
+.hero { margin-bottom: 4.5rem; }
+.hero h1 {
+  font-size: 2.4rem; font-weight: 500;
+  letter-spacing: -0.03em; margin-bottom: 0.45rem;
+  color: var(--text);
+}
+.hero .role   { font-size: 1rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+.hero .institute { font-size: 0.9rem; color: var(--text-faint); }
 
-/* Papers */
-.papers-list { list-style: none; }
-.paper { padding: 1.5rem 0; border-top: 1px solid #ebebeb; }
-.paper:last-child { border-bottom: 1px solid #ebebeb; }
-.paper-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; }
-.paper-authors { font-size: 0.83rem; color: #777; margin-bottom: 0.2rem; }
-.paper-venue { font-size: 0.8rem; color: #aaa; font-style: italic; margin-bottom: 0.5rem; }
-.paper-link { font-size: 0.8rem; color: #666; border-bottom: 1px solid #ccc; transition: color 0.15s, border-color 0.15s; }
-.paper-link:hover { color: #111; border-color: #111; }
+.hero-links { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 1.4rem; }
+.hero-links a {
+  font-size: 0.83rem; color: var(--text-muted);
+  border-bottom: 1px solid var(--link-ul);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.hero-links a:hover { color: var(--text); border-color: var(--text); }
 
-/* Mobile */
-@media (max-width: 600px) {
+/* ── Home – contact ── */
+.contact-section h2 { font-size: 1.05rem; font-weight: 500; margin-bottom: 1.1rem; color: var(--text); }
+.contact-section address {
+  font-style: normal; font-size: 0.88rem;
+  color: var(--text-muted); line-height: 2.1;
+}
+.contact-section address strong {
+  display: block; color: var(--text); font-weight: 500; margin-bottom: 0.05rem;
+}
+.contact-section address a {
+  border-bottom: 1px solid var(--link-ul);
+  transition: border-color 0.15s, color 0.15s;
+}
+.contact-section address a:hover { color: var(--text); border-color: var(--text); }
+
+/* ── Generic page heading ── */
+.page-title {
+  font-size: 2rem; font-weight: 500;
+  letter-spacing: -0.03em; margin-bottom: 2rem;
+  color: var(--text);
+}
+
+/* ── About ── */
+.page-body p {
+  font-size: 0.9rem; color: var(--text-muted);
+  line-height: 1.9; max-width: 680px; margin-bottom: 1.3rem;
+}
+.page-body h2 {
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--text); margin-top: 2.25rem; margin-bottom: 0.75rem;
+}
+.bullet-list { list-style: disc; padding-left: 1.4rem; margin-bottom: 1.25rem; }
+.bullet-list li { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.35rem; line-height: 1.7; }
+
+/* ── Research ── */
+.research-subtitle {
+  font-size: 0.9rem; color: var(--text-faint);
+  margin-top: -1.5rem; margin-bottom: 2.5rem;
+}
+.project-block { margin-bottom: 2.5rem; }
+.project-block h2 { font-size: 1.05rem; font-weight: 500; color: var(--text); margin-bottom: 0.55rem; }
+.project-block p  { font-size: 0.9rem; color: var(--text-muted); line-height: 1.9; max-width: 680px; margin-bottom: 0.75rem; }
+.project-block ul { list-style: disc; padding-left: 1.4rem; }
+.project-block ul li { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+/* ── Papers ── */
+.papers-section-heading {
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--text); margin-bottom: 0.25rem; margin-top: 2.5rem;
+}
+.papers-section-heading:first-child { margin-top: 0; }
+.papers-list { list-style: none; margin-top: 0.5rem; }
+.paper { padding: 1.4rem 0; border-top: 1px solid var(--border); }
+.paper:last-child { border-bottom: 1px solid var(--border); }
+.paper-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; color: var(--text); }
+.paper-authors { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+.paper-authors b { color: var(--text); }
+.paper-venue { font-size: 0.8rem; color: var(--text-faint); font-style: italic; margin-bottom: 0.55rem; }
+.paper-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.paper-link {
+  font-size: 0.8rem; color: var(--text-muted);
+  border-bottom: 1px solid var(--link-ul);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.paper-link:hover { color: var(--text); border-color: var(--text); }
+
+/* ── Mobile ── */
+@media (max-width: 620px) {
   .nav-links { display: none; }
   .menu-btn  { display: block; }
   .hero h1   { font-size: 1.8rem; }
-  main       { padding: 2.5rem 1.25rem 4rem; }
+  main       { margin: 1rem; padding: 1.75rem 1.25rem 3.5rem; border-radius: 10px; }
 }

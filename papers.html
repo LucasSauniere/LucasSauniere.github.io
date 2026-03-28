@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Papers – Lucas Sauniere</title>
+  <title>Papers – Lucas Saunière</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <span class="nav-logo"><a href="index.html">Lucas Sauniere</a></span>
+      <span class="nav-logo"><a href="index.html">Lucas Saunière</a></span>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About Me</a></li>
         <li><a href="research.html">Research</a></li>
         <li><a href="papers.html" class="active">Papers</a></li>
       </ul>
-      <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Open Menu</button>
+      <div class="nav-controls">
+        <button class="theme-btn" id="themeBtn" title="Toggle dark / light mode">🌙</button>
+        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Menu</button>
+      </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
       <a href="index.html">Home</a>
@@ -25,34 +28,132 @@
       <a href="papers.html">Papers</a>
     </nav>
   </header>
+
   <main>
     <h1 class="page-title">Papers</h1>
+
+    <!-- ── Journal Articles ── -->
+    <h2 class="papers-section-heading">Journal Articles</h2>
     <ul class="papers-list">
+
       <li class="paper">
-        <p class="paper-title">[Paper Title 1]</p>
-        <p class="paper-authors">[Author 1, Author 2, Author 3]</p>
-        <p class="paper-venue">[Journal / Conference, Year]</p>
-        <a href="#" class="paper-link">arXiv / PDF</a>
+        <p class="paper-title">
+          Spread: a framework for PSF-based aberration analysis. Estimation of Zernike coefficients
+          and PSF reconstruction using deep learning
+        </p>
+        <p class="paper-authors"><b>L. Saunière</b>, W. Gillard, J. Zoubian</p>
+        <p class="paper-venue">Elsevier Measurements — submitted (2025)</p>
+        <div class="paper-links">
+          <span class="paper-link" style="border:none;color:var(--text-faint)">Preprint coming soon</span>
+        </div>
       </li>
+
+    </ul>
+
+    <!-- ── Conference Papers ── -->
+    <h2 class="papers-section-heading">Conference Papers</h2>
+    <ul class="papers-list">
+
       <li class="paper">
-        <p class="paper-title">[Paper Title 2]</p>
-        <p class="paper-authors">[Author 1, Author 2]</p>
-        <p class="paper-venue">[Journal / Conference, Year]</p>
-        <a href="#" class="paper-link">arXiv / PDF</a>
+        <p class="paper-title">
+          Decoding optical aberrations of low-resolution instruments from PSFs:
+          machine learning and Zernike polynomials perspectives
+        </p>
+        <p class="paper-authors"><b>L. Saunière</b>, W. Gillard, J. Zoubian</p>
+        <p class="paper-venue">
+          SPIE Astronomical Telescopes + Instrumentation 2024 — Proc. SPIE 13092, 130923I ·
+          Yokohama, Japan · June 2024
+        </p>
+        <div class="paper-links">
+          <a class="paper-link"
+             href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/13092/130923I/Decoding-optical-aberrations-of-low-resolution-Instruments-from-PSFs/10.1117/12.3018334.short"
+             target="_blank" rel="noopener">DOI / SPIE</a>
+        </div>
       </li>
+
       <li class="paper">
-        <p class="paper-title">[Paper Title 3]</p>
-        <p class="paper-authors">[Author 1, Author 2, Author 3, Author 4]</p>
-        <p class="paper-venue">[Journal / Conference, Year]</p>
-        <a href="#" class="paper-link">arXiv / PDF</a>
+        <p class="paper-title">
+          Euclid near infrared spectrometer and photometer instrument NISP in space
+        </p>
+        <p class="paper-authors">
+          W. Gillard, S. Dusini, K. Jahnke, E. Prieto, N. Auricchio, R. Barbier,
+          <b>L. Saunière</b>, et al.
+        </p>
+        <p class="paper-venue">
+          SPIE Astronomical Telescopes + Instrumentation 2024 — Proc. SPIE ·
+          Yokohama, Japan · June 2024
+        </p>
+        <div class="paper-links">
+          <a class="paper-link"
+             href="https://hal.science/hal-04683757v1/file/SPIE_NISP_2024.pdf"
+             target="_blank" rel="noopener">HAL PDF</a>
+        </div>
       </li>
+
+      <li class="paper">
+        <p class="paper-title">
+          Euclid commissioning results: the NISP signal detection chain
+        </p>
+        <p class="paper-authors">
+          F. Cogato, E. Medinaceli, R. Barbier, S. Dusini, W. Gillard,
+          <b>L. Saunière</b>, J. Zoubian, et al.
+        </p>
+        <p class="paper-venue">
+          SPIE Astronomical Telescopes + Instrumentation 2024 — Proc. SPIE 13092 ·
+          Yokohama, Japan · June 2024
+        </p>
+        <div class="paper-links">
+          <a class="paper-link"
+             href="https://ui.adsabs.harvard.edu/abs/2024SPIE13092E..3GC/abstract"
+             target="_blank" rel="noopener">ADS</a>
+        </div>
+      </li>
+
+    </ul>
+
+    <!-- ── Conferences (proceedings-free) ── -->
+    <h2 class="papers-section-heading">Conferences & Talks</h2>
+    <ul class="papers-list">
+
+      <li class="paper">
+        <p class="paper-title">Decoding optical aberrations of low-resolution instruments from PSFs</p>
+        <p class="paper-authors"><b>L. Saunière</b>, W. Gillard, J. Zoubian</p>
+        <p class="paper-venue">SPIE Astronomical Telescopes + Instrumentation 2024 — oral & poster · Yokohama, Japan</p>
+      </li>
+
+      <li class="paper">
+        <p class="paper-title">Euclid Consortium Meeting 2023</p>
+        <p class="paper-authors"><b>L. Saunière</b></p>
+        <p class="paper-venue">Euclid Consortium Meeting · Copenhagen, Denmark · June 2023</p>
+      </li>
+
+      <li class="paper">
+        <p class="paper-title">Euclid France Meeting 2023</p>
+        <p class="paper-authors"><b>L. Saunière</b></p>
+        <p class="paper-venue">Euclid France Meeting · Lyon, France · April 2023</p>
+      </li>
+
+      <li class="paper">
+        <p class="paper-title">Dark Energy Colloquium 2022</p>
+        <p class="paper-authors"><b>L. Saunière</b></p>
+        <p class="paper-venue">Dark Energy Colloquium · Marseille, France · November 2022</p>
+      </li>
+
+      <li class="paper">
+        <p class="paper-title">Euclid France Meeting 2022</p>
+        <p class="paper-authors"><b>L. Saunière</b></p>
+        <p class="paper-venue">Euclid France Meeting · Paris, France · October 2022</p>
+      </li>
+
     </ul>
   </main>
+
+  <script src="theme.js"></script>
   <script>
     function toggleMenu() {
       const nav = document.getElementById('mobileNav');
       const btn = document.getElementById('menuBtn');
-      btn.textContent = nav.classList.toggle('open') ? 'Close Menu' : 'Open Menu';
+      btn.textContent = nav.classList.toggle('open') ? 'Close' : 'Menu';
     }
   </script>
 </body>
