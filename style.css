@@ -100,6 +100,25 @@ main {
   transition: background 0.2s, border-color 0.2s;
 }
 
+/* ── Social / icon links ── */
+.social-links {
+  display: flex; gap: 0.65rem; flex-wrap: wrap; margin-top: 1.75rem;
+}
+.social-link {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-size: 0.81rem; color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.38rem 0.85rem;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.social-link:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+  background: rgba(128,128,128,0.06);
+}
+.social-link i { font-size: 0.92rem; }
+
 /* ── Home – hero ── */
 .hero { margin-bottom: 4.5rem; }
 .hero h1 {
@@ -118,6 +137,30 @@ main {
   transition: color 0.15s, border-color 0.15s;
 }
 .hero-links a:hover { color: var(--text); border-color: var(--text); }
+
+/* ── Home – institute link ── */
+.institute-link {
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--link-ul);
+  transition: color 0.15s, border-color 0.15s;
+}
+.institute-link:hover { color: var(--text); border-color: var(--text); }
+
+/* ── Home – blurb ── */
+.home-blurb {
+  margin-bottom: 4rem;
+  padding-top: 0.25rem;
+}
+.home-blurb p {
+  font-size: 0.9rem; color: var(--text-muted);
+  line-height: 1.9; max-width: 680px; margin-bottom: 1rem;
+}
+.inline-link {
+  border-bottom: 1px solid var(--link-ul);
+  color: var(--text-muted);
+  transition: color 0.15s, border-color 0.15s;
+}
+.inline-link:hover { color: var(--text); border-color: var(--text); }
 
 /* ── Home – contact ── */
 .contact-section h2 { font-size: 1.05rem; font-weight: 500; margin-bottom: 1.1rem; color: var(--text); }

@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lucas Saunière</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome (free CDN) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
   <header class="site-header">
@@ -30,18 +34,55 @@
   </header>
 
   <main>
+    <!-- ── Hero ── -->
     <section class="hero">
       <h1>Lucas Saunière</h1>
       <p class="role">Doctor in Optics, Photonics & Image Processing</p>
-      <p class="institute">CPPM — Centre de Physique des Particules de Marseille, France</p>
-      <div class="hero-links">
-        <a href="mailto:lucas.sauniere@ipsa.fr">lucas.sauniere@ipsa.fr</a>
-        <a href="https://github.com/LucasSauniere" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.linkedin.com/in/lucas-sauniere-27a40b173" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://orcid.org/0009-0007-0045-2663" target="_blank" rel="noopener">ORCID</a>
+      <p class="institute">
+        <a href="https://www.cppm.in2p3.fr/" target="_blank" rel="noopener" class="institute-link">
+          CPPM — Centre de Physique des Particules de Marseille
+        </a>, France
+      </p>
+
+      <!-- Social badge row -->
+      <div class="social-links">
+        <a class="social-link" href="mailto:lucas.sauniere@ipsa.fr">
+          <i class="fa-solid fa-envelope"></i> lucas.sauniere@ipsa.fr
+        </a>
+        <a class="social-link" href="https://github.com/LucasSauniere" target="_blank" rel="noopener">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/lucas-sauniere-27a40b173" target="_blank" rel="noopener">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a class="social-link" href="https://orcid.org/0009-0007-0045-2663" target="_blank" rel="noopener">
+          <i class="fa-brands fa-orcid"></i> ORCID
+        </a>
+        <a class="social-link" href="https://dispers.in2p3.fr/index.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-satellite-dish"></i> DISPERS
+        </a>
       </div>
     </section>
 
+    <!-- ── Short bio blurb ── -->
+    <section class="home-blurb">
+      <p>
+        I recently completed my <strong>PhD in Optics, Photonics and Image Processing</strong> at
+        <a href="https://www.cppm.in2p3.fr/" target="_blank" rel="noopener" class="inline-link">CPPM</a>,
+        defended January 29th, 2025. My thesis focused on modeling the instrumental response of the
+        <strong>Euclid NISP instrument</strong> within the
+        <a href="https://dispers.in2p3.fr/index.html" target="_blank" rel="noopener" class="inline-link">DISPERS project</a>,
+        combining <strong>Zernike polynomial analysis</strong> and <strong>deep learning</strong> to
+        characterize optical aberrations from PSF images.
+      </p>
+      <p>
+        I am currently looking for a <strong>postdoc position in Canada or the United States</strong> in
+        optics, computational imaging, or machine learning for science.
+        <a href="mailto:lucas.sauniere@ipsa.fr" class="inline-link">Get in touch!</a>
+      </p>
+    </section>
+
+    <!-- ── Contact ── -->
     <section class="contact-section">
       <h2>Contact</h2>
       <address>
