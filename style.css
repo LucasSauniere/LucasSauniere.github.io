@@ -184,6 +184,31 @@ main {
   color: var(--text);
 }
 
+/* ── About – intro photo + text ── */
+.about-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.25rem;
+  margin-bottom: 2rem;
+}
+.about-photo {
+  width: 200px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 18px rgba(0,0,0,0.12));
+}
+.about-intro-text { flex: 1; }
+.about-intro-text p {
+  font-size: 0.9rem; color: var(--text-muted);
+  line-height: 1.9; max-width: 680px; margin-bottom: 1rem;
+}
+
+@media (max-width: 620px) {
+  .about-intro { flex-direction: column; align-items: center; }
+  .about-photo { width: 150px; }
+}
+
 /* ── About ── */
 .page-body p {
   font-size: 0.9rem; color: var(--text-muted);
