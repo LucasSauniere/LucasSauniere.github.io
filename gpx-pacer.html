@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPX Pacer - Lucas Saunière</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── GPX Pacer specific styles ── */
+    .pacer-intro {
+      margin-bottom: 2.5rem;
+    }
+    .pacer-intro p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+      max-width: 680px;
+      margin-bottom: 1rem;
+    }
+    .pacer-intro a {
+      border-bottom: 1px solid var(--link-ul);
+      color: var(--text-muted);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .pacer-intro a:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
+
+    .upload-section {
+      background: rgba(128, 128, 128, 0.03);
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+    .upload-section:hover {
+      border-color: var(--text-muted);
+      background: rgba(128, 128, 128, 0.08);
+    }
+    .upload-section.dragover {
+      border-color: var(--text);
+      background: rgba(128, 128, 128, 0.15);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+    .file-input-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(128, 128, 128, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .file-input-label:hover {
+      background: rgba(128, 128, 128, 0.15);
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    .upload-info {
+      font-size: 0.85rem;
+      color: var(--text-faint);
+      margin-top: 1rem;
+    }
+
+    .options-section {
+      background: rgba(128, 128, 128, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .options-section h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .option-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .option-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .option-group select,
+    .option-group input {
+      padding: 0.4rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .option-group select:focus,
+    .option-group input:focus {
+      outline: none;
+      border-color: var(--text-muted);
+    }
+
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .checkbox-option input[type="checkbox"] {
+      cursor: pointer;
+    }
+    .checkbox-option label {
+      margin: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      padding: 0.65rem 1.4rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(128, 128, 128, 0.08);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn:hover {
+      background: rgba(128, 128, 128, 0.15);
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: rgba(100, 150, 255, 0.15);
+      border-color: rgba(100, 150, 255, 0.3);
+      color: var(--text);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: rgba(100, 150, 255, 0.25);
+      border-color: rgba(100, 150, 255, 0.5);
+    }
+
+    .status-message {
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      display: none;
+    }
+    .status-message.show {
+      display: block;
+    }
+    .status-message.info {
+      background: rgba(100, 150, 255, 0.1);
+      border: 1px solid rgba(100, 150, 255, 0.2);
+      color: var(--text);
+    }
+    .status-message.error {
+      background: rgba(255, 100, 100, 0.1);
+      border: 1px solid rgba(255, 100, 100, 0.2);
+      color: #ff6464;
+    }
+    .status-message.success {
+      background: rgba(100, 255, 150, 0.1);
+      border: 1px solid rgba(100, 255, 150, 0.2);
+      color: #64ff96;
+    }
+
+    .results-section {
+      background: rgba(128, 128, 128, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: none;
+    }
+    .results-section.show {
+      display: block;
+    }
+    .results-section h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .metadata-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem;
+    }
+    .metadata-label {
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.3rem;
+    }
+    .metadata-value {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .splits-table {
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    .splits-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .splits-table thead {
+      background: rgba(128, 128, 128, 0.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .splits-table th {
+      padding: 0.7rem;
+      text-align: left;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .splits-table td {
+      padding: 0.6rem 0.7rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .splits-table tbody tr:hover {
+      background: rgba(128, 128, 128, 0.04);
+    }
+
+    .download-links {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: rgba(100, 255, 150, 0.15);
+      border: 1px solid rgba(100, 255, 150, 0.3);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .download-btn:hover {
+      background: rgba(100, 255, 150, 0.25);
+      border-color: rgba(100, 255, 150, 0.5);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(128, 128, 128, 0.2);
+      border-top-color: var(--text-muted);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <span class="nav-logo"><a href="index.html">Lucas Saunière</a></span>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="gpx-pacer.html" class="active">GPX Pacer</a></li>
+      </ul>
+      <div class="nav-controls">
+        <button class="theme-btn" id="themeBtn" title="Toggle dark / light mode">🌙</button>
+        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Menu</button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Me</a>
+      <a href="research.html">Research</a>
+      <a href="papers.html">Papers</a>
+      <a href="gpx-pacer.html">GPX Pacer</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1 class="page-title">GPX Pacer</h1>
+
+    <div class="pacer-intro">
+      <p>
+        <strong>GPX Pacer</strong> is a tool that analyzes GPX files to generate pacing splits for ultra running.
+        Upload a GPX file to calculate splits by distance or waypoints, elevation gain/loss, and optional surface
+        types.
+      </p>
+      <p>
+        Built on the <a href="https://github.com/Zettt/gpx-pacer" target="_blank" rel="noopener">GPX Pacer project</a>
+        by <strong>Zettt</strong>. Useful for planning pacing strategies on trail races and ultra marathons.
+      </p>
+    </div>
+
+    <!-- Status message -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <!-- Upload section -->
+    <div class="upload-section" id="uploadSection">
+      <div class="file-input-wrapper">
+        <input type="file" id="gpxInput" accept=".gpx" />
+        <label for="gpxInput" class="file-input-label">
+          📁 Choose GPX File
+        </label>
+      </div>
+      <p class="upload-info">or drag and drop a GPX file here</p>
+    </div>
+
+    <!-- Options section -->
+    <div class="options-section">
+      <h3>Analysis Options</h3>
+
+      <div class="option-row">
+        <div class="option-group">
+          <label for="splitMode">Split Mode:</label>
+          <select id="splitMode">
+            <option value="distance">By Distance</option>
+            <option value="waypoint">By Waypoints (Aid Stations)</option>
+          </select>
+        </div>
+
+        <div class="option-group" id="splitDistGroup">
+          <label for="splitDistance">Split Distance:</label>
+          <input type="number" id="splitDistance" min="0.1" step="0.1" value="1" />
+        </div>
+
+        <div class="option-group" id="unitGroup">
+          <label for="unit">Unit:</label>
+          <select id="unit">
+            <option value="km">Kilometers</option>
+            <option value="mi">Miles</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="option-row">
+        <div class="option-group">
+          <label for="format">Output Format:</label>
+          <select id="format">
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+          </select>
+        </div>
+
+        <div class="checkbox-option">
+          <input type="checkbox" id="surface" />
+          <label for="surface">Include Surface Type Detection (slower)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="button-group">
+      <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeCourse()">
+        Analyze Course
+      </button>
+      <button class="btn" id="resetBtn" onclick="resetForm()">
+        Clear
+      </button>
+    </div>
+
+    <!-- Results section -->
+    <div class="results-section" id="resultsSection">
+      <h3>Analysis Results</h3>
+
+      <div class="metadata-grid" id="metadataGrid"></div>
+
+      <div class="splits-table" id="splitsTable"></div>
+
+      <div class="download-links" id="downloadLinks"></div>
+    </div>
+  </main>
+
+  <script src="theme.js"></script>
+  <script>
+    let currentData = null;
+    let currentFormat = 'csv';
+
+    // Toggle mobile menu
+    function toggleMenu() {
+      const nav = document.getElementById('mobileNav');
+      const btn = document.getElementById('menuBtn');
+      btn.textContent = nav.classList.toggle('open') ? 'Close' : 'Menu';
+    }
+
+    // Handle split mode change
+    document.getElementById('splitMode').addEventListener('change', function() {
+      const isDistance = this.value === 'distance';
+      document.getElementById('splitDistGroup').style.display = isDistance ? 'flex' : 'none';
+      document.getElementById('unitGroup').style.display = isDistance ? 'flex' : 'none';
+    });
+
+    // File input handling
+    const uploadSection = document.getElementById('uploadSection');
+    const gpxInput = document.getElementById('gpxInput');
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        gpxInput.files = e.dataTransfer.files;
+        showStatus('File selected: ' + e.dataTransfer.files[0].name, 'info');
+      }
+    });
+
+    gpxInput.addEventListener('change', function() {
+      if (this.files.length) {
+        showStatus('File selected: ' + this.files[0].name, 'info');
+      }
+    });
+
+    // Status message
+    function showStatus(message, type = 'info') {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.textContent = message;
+      statusEl.className = 'status-message show ' + type;
+    }
+
+    function hideStatus() {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.classList.remove('show');
+    }
+
+    // Analyze course
+    async function analyzeCourse() {
+      const file = gpxInput.files[0];
+      if (!file) {
+        showStatus('Please select a GPX file', 'error');
+        return;
+      }
+
+      const splitMode = document.getElementById('splitMode').value;
+      const splitDistance = document.getElementById('splitDistance').value;
+      const unit = document.getElementById('unit').value;
+      currentFormat = document.getElementById('format').value;
+      const surface = document.getElementById('surface').checked;
+
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      analyzeBtn.disabled = true;
+      analyzeBtn.innerHTML = '<span class="loading-spinner"></span> Processing...';
+
+      try {
+        showStatus('Processing your GPX file...', 'info');
+
+        // Read GPX file
+        const fileContent = await file.text();
+
+        // Parse GPX
+        const data = parseGPX(fileContent);
+
+        if (!data.track || data.track.length === 0) {
+          showStatus('No track data found in GPX file', 'error');
+          analyzeBtn.disabled = false;
+          analyzeBtn.textContent = 'Analyze Course';
+          return;
+        }
+
+        // Calculate splits
+        let splits;
+        if (splitMode === 'distance') {
+          splits = calculateDistanceSplits(data.track, parseFloat(splitDistance), unit);
+        } else {
+          splits = calculateWaypointSplits(data.track, data.waypoints || []);
+        }
+
+        // Store results
+        currentData = {
+          metadata: {
+            filename: file.name,
+            total_dist: splits.totalDistance,
+            total_gain: splits.totalGain,
+            total_loss: splits.totalLoss,
+            splits_count: splits.splits.length
+          },
+          splits: splits.splits
+        };
+
+        displayResults();
+        showStatus('Analysis complete!', 'success');
+      } catch (error) {
+        showStatus('Error processing file: ' + error.message, 'error');
+        console.error(error);
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Analyze Course';
+      }
+    }
+
+    // Parse GPX file
+    function parseGPX(xmlString) {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+
+      if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+        throw new Error('Invalid GPX file');
+      }
+
+      const track = [];
+      const trkpts = xmlDoc.querySelectorAll('trkpt');
+
+      trkpts.forEach(pt => {
+        const lat = parseFloat(pt.getAttribute('lat'));
+        const lon = parseFloat(pt.getAttribute('lon'));
+        const eleEl = pt.querySelector('ele');
+        const ele = eleEl ? parseFloat(eleEl.textContent) : 0;
+
+        track.push({ lat, lon, ele });
+      });
+
+      const waypoints = [];
+      const wpts = xmlDoc.querySelectorAll('wpt');
+
+      wpts.forEach(pt => {
+        const lat = parseFloat(pt.getAttribute('lat'));
+        const lon = parseFloat(pt.getAttribute('lon'));
+        const nameEl = pt.querySelector('name');
+        const name = nameEl ? nameEl.textContent : 'Waypoint';
+
+        waypoints.push({ lat, lon, name });
+      });
+
+      return { track, waypoints };
+    }
+
+    // Calculate distance between two points (Haversine formula)
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth radius in km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Calculate distance splits
+    function calculateDistanceSplits(track, splitDist, unit) {
+      const splits = [];
+      let currentDist = 0;
+      let currentGain = 0;
+      let currentLoss = 0;
+      let lastEle = track[0].ele;
+      let splitStartIdx = 0;
+
+      const unitMultiplier = unit === 'mi' ? 0.621371 : 1;
+      const targetDist = splitDist / unitMultiplier;
+
+      for (let i = 1; i < track.length; i++) {
+        const dist = haversineDistance(track[i - 1].lat, track[i - 1].lon, track[i].lat, track[i].lon);
+        const eleDiff = track[i].ele - track[i - 1].ele;
+
+        currentDist += dist;
+        if (eleDiff > 0) currentGain += eleDiff;
+        else currentLoss += -eleDiff;
+
+        if (currentDist >= targetDist || i === track.length - 1) {
+          const grade = currentDist > 0 ? ((currentGain - currentLoss) / currentDist) * 100 : 0;
+          splits.push({
+            segment_name: `${splitDist} ${unit}`,
+            distance_km: currentDist * unitMultiplier,
+            split_length_km: currentDist,
+            gain_m: Math.round(currentGain),
+            loss_m: Math.round(currentLoss),
+            net_change_m: Math.round(currentGain - currentLoss),
+            grade_pct: grade.toFixed(1)
+          });
+
+          currentDist = 0;
+          currentGain = 0;
+          currentLoss = 0;
+        }
+
+        lastEle = track[i].ele;
+      }
+
+      // Calculate totals
+      let totalDistance = 0;
+      let totalGain = 0;
+      let totalLoss = 0;
+
+      splits.forEach(s => {
+        totalDistance += s.split_length_km;
+        totalGain += s.gain_m;
+        totalLoss += s.loss_m;
+      });
+
+      return { splits, totalDistance, totalGain, totalLoss };
+    }
+
+    // Calculate waypoint splits
+    function calculateWaypointSplits(track, waypoints) {
+      const splits = [];
+      // Simplified version - would need proper waypoint matching
+      return { splits: [], totalDistance: 0, totalGain: 0, totalLoss: 0 };
+    }
+
+    // Display results
+    function displayResults() {
+      if (!currentData) return;
+
+      // Metadata
+      const metadataGrid = document.getElementById('metadataGrid');
+      metadataGrid.innerHTML = `
+        <div class="metadata-item">
+          <div class="metadata-label">Total Distance</div>
+          <div class="metadata-value">${currentData.metadata.total_dist.toFixed(2)} km</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Elevation Gain</div>
+          <div class="metadata-value">${Math.round(currentData.metadata.total_gain)} m</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Elevation Loss</div>
+          <div class="metadata-value">${Math.round(currentData.metadata.total_loss)} m</div>
+        </div>
+        <div class="metadata-item">
+          <div class="metadata-label">Number of Splits</div>
+          <div class="metadata-value">${currentData.metadata.splits_count}</div>
+        </div>
+      `;
+
+      // Splits table
+      const splitsTable = document.getElementById('splitsTable');
+      let tableHTML = '<table><thead><tr>';
+      tableHTML += '<th>Segment</th><th>Distance (km)</th><th>Split (km)</th><th>Gain (m)</th><th>Loss (m)</th><th>Net (m)</th><th>Grade (%)</th>';
+      tableHTML += '</tr></thead><tbody>';
+
+      currentData.splits.forEach(split => {
+        tableHTML += '<tr>';
+        tableHTML += `<td>${split.segment_name}</td>`;
+        tableHTML += `<td>${split.distance_km.toFixed(2)}</td>`;
+        tableHTML += `<td>${split.split_length_km.toFixed(2)}</td>`;
+        tableHTML += `<td>${split.gain_m}</td>`;
+        tableHTML += `<td>${split.loss_m}</td>`;
+        tableHTML += `<td>${split.net_change_m}</td>`;
+        tableHTML += `<td>${split.grade_pct}</td>`;
+        tableHTML += '</tr>';
+      });
+
+      tableHTML += '</tbody></table>';
+      splitsTable.innerHTML = tableHTML;
+
+      // Download links
+      const downloadLinks = document.getElementById('downloadLinks');
+      let dataStr, filename;
+
+      if (currentFormat === 'csv') {
+        dataStr = generateCSV();
+        filename = currentData.metadata.filename.replace('.gpx', '_pacing.csv');
+      } else {
+        dataStr = JSON.stringify(currentData, null, 2);
+        filename = currentData.metadata.filename.replace('.gpx', '_pacing.json');
+      }
+
+      const dataBlob = new Blob([dataStr], { type: currentFormat === 'csv' ? 'text/csv' : 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+
+      downloadLinks.innerHTML = `
+        <a href="${url}" download="${filename}" class="download-btn">
+          ⬇️ Download ${currentFormat.toUpperCase()}
+        </a>
+      `;
+
+      document.getElementById('resultsSection').classList.add('show');
+    }
+
+    // Generate CSV
+    function generateCSV() {
+      let csv = 'Segment,Distance (km),Split (km),Gain (m),Loss (m),Net Change (m),Grade (%),Target Pace,Split Time,Arrival Time,Station Delay\n';
+
+      currentData.splits.forEach(split => {
+        csv += `"${split.segment_name}",${split.distance_km.toFixed(2)},${split.split_length_km.toFixed(2)},${split.gain_m},${split.loss_m},${split.net_change_m},${split.grade_pct},,,,\n`;
+      });
+
+      return csv;
+    }
+
+    // Reset form
+    function resetForm() {
+      gpxInput.value = '';
+      document.getElementById('splitMode').value = 'distance';
+      document.getElementById('splitDistance').value = '1';
+      document.getElementById('unit').value = 'km';
+      document.getElementById('format').value = 'csv';
+      document.getElementById('surface').checked = false;
+      document.getElementById('resultsSection').classList.remove('show');
+      hideStatus();
+      currentData = null;
+    }
+  </script>
+</body>
+</html>
