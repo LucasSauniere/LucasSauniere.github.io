@@ -1,0 +1,20 @@
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{classic}
+\name{(((profile.name.split()[0])))}{(((profile.name.split()[1])))}
+\email{(((profile.email)))}
+
+\begin{document}
+\makecvtitle
+
+\section{Awards}
+((* for a in awards *))
+\cvitem{(((a.year)))}{\textbf{(((a.title)))}. Team led by
+  (((a.leads|join(' and '))). Contribution: (((a.contribution)))}
+((* endfor *))
+
+\section{Software}
+((* for s in software *))
+\cvitem{(((s.name)))}{(((s.purpose))) \href{(((s.url)))}{[repo]}}
+((* endfor *))
+
+\end{document}

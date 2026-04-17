@@ -1,0 +1,24 @@
+name: Build CV and site
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install jinja2 pyyaml bibtexparser
+      - name: Install TeX Live
+        run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
+      - name: Build
+        run: python src/build.py
+      - name: Commit built artifacts
+        run: |
+          git config user.name  "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html about.html research.html papers.html cv/*.pdf
+          git diff --cached --quiet || git commit -m "Auto-build [skip ci]"
+          git push

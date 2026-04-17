@@ -1,0 +1,11 @@
+- name: psfcraft
+  purpose: PSF simulation for the NISP instrument
+  url: https://github.com/LucasSauniere/psfcraft
+
+- name: zernet
+  purpose: Zernike coefficient extraction from pure (noiseless) PSFs
+  url: https://github.com/LucasSauniere/zernet
+
+- name: spread
+  purpose: Zernike coefficient extraction from noisy PSFs
+  url: https://github.com/LucasSauniere/spread

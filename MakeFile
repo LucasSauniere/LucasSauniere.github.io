@@ -1,0 +1,12 @@
+cat > Makefile <<'EOF'
+.PHONY: build clean serve
+
+build:
+	python src/build.py
+
+clean:
+	rm -rf src/build cv/*.pdf
+
+serve: build
+	python -m http.server 8000
+EOF

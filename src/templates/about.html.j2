@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About — {{ profile.name }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>{{ profile.name }}</h1>
+  <p>{{ profile.bio_short }}</p>
+
+  <h2>Awards</h2>
+  <ul>
+    {% for a in awards %}
+      <li><strong>{{ a.year }} — {{ a.title }}</strong>.
+          {{ a.contribution }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Software</h2>
+  <ul>
+    {% for s in software %}
+      <li><a href="{{ s.url }}">{{ s.name }}</a> — {{ s.purpose }}</li>
+    {% endfor %}
+  </ul>
+
+  <p><a href="cv/Lucas_Sauniere_CV.pdf">Download CV (PDF)</a></p>
+  <script src="theme.js"></script>
+</body>
+</html>
