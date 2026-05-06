@@ -1,0 +1,26 @@
+{% extends "base.html.j2" %}
+{% set active = 'home' %}
+{% block title %}{{ profile.name }}{% endblock %}
+
+{% block content %}
+<header class="hero">
+  <h1>{{ profile.name }}</h1>
+  {% if profile.get('role') %}<p class="role">{{ profile.role }}</p>{% endif %}
+  {% if profile.get('affiliation') %}<p class="affiliation">{{ profile.affiliation }}</p>{% endif %}
+</header>
+
+<section>
+  <p>{{ profile.bio_short }}</p>
+</section>
+
+<section>
+  <h2>Links</h2>
+  <ul>
+    {% if profile.get('email') %}<li>Email: <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
+    {% if profile.get('orcid') %}<li>ORCID: <a href="https://orcid.org/{{ profile.orcid }}">{{ profile.orcid }}</a></li>{% endif %}
+    {% if profile.get('github') %}<li>GitHub: <a href="https://github.com/{{ profile.github }}">{{ profile.github }}</a></li>{% endif %}
+  </ul>
+</section>
+
+<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+{% endblock %}

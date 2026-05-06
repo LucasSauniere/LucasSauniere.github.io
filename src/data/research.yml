@@ -1,0 +1,6 @@
+- title: "PSF-based aberration retrieval"
+  description: "Deep learning methods to extract Zernike coefficients from under-sampled PSFs."
+  keywords: ["Zernike", "CNN", "diffusion models"]
+- title: "Euclid NISP calibration"
+  description: "Image persistence modeling for HgCdTe H2RG detectors."
+  keywords: ["Euclid", "NISP", "detector physics"]

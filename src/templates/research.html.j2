@@ -1,0 +1,21 @@
+{% extends "base.html.j2" %}
+{% set active = 'research' %}
+{% block title %}Research — {{ profile.name }}{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Research</h1>
+{% if research_subtitle is defined %}<p class="research-subtitle">{{ research_subtitle }}</p>{% endif %}
+
+{% for topic in research %}
+  <article class="project-block">
+    <h2>{{ topic.title }}</h2>
+    {% if topic.get('description') %}<p>{{ topic.description }}</p>{% endif %}
+    {% if topic.get('items') %}
+      <ul>
+        {% for it in topic.items %}<li>{{ it }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  </article>
+  {% if not loop.last %}<hr class="divider">{% endif %}
+{% endfor %}
+{% endblock %}

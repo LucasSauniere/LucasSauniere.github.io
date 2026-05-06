@@ -1,109 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lucas Saunière</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Font Awesome (free CDN) -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <span class="nav-logo"><a href="index.html">Lucas Saunière</a></span>
+      <div class="nav-logo"><a href="index.html">Lucas Saunière</a></div>
+
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="about.html">About Me</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="papers.html">Papers</a></li>
-        <!-- <li><a href="gpx-pacer.html">GPX Pacer</a></li> -->
+        <li><a href="index.html"    class="active">Home</a></li>
+        <li><a href="about.html"    >About</a></li>
+        <li><a href="research.html" >Research</a></li>
+        <li><a href="papers.html"   >Publications</a></li>
       </ul>
+
       <div class="nav-controls">
-        <button class="theme-btn" id="themeBtn" title="Toggle dark / light mode">🌙</button>
-        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">Menu</button>
+        <button class="theme-btn" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+        <button class="menu-btn" aria-expanded="false">Menu</button>
       </div>
     </div>
-    <nav class="mobile-nav" id="mobileNav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About Me</a>
-      <a href="research.html">Research</a>
-      <a href="papers.html">Papers</a>
-      <!-- <a href="gpx-pacer.html">GPX Pacer</a> -->
+
+    <nav class="mobile-nav">
+      <a href="index.html"    class="active">Home</a>
+      <a href="about.html"    >About</a>
+      <a href="research.html" >Research</a>
+      <a href="papers.html"   >Publications</a>
     </nav>
   </header>
 
   <main>
-    <!-- ── Hero ── -->
-    <section class="hero">
-      <h1>Lucas Saunière</h1>
-      <p class="role">Doctor in Optics, Photonics & Image Processing</p>
-      <p class="institute">
-        <a href="https://www.cppm.in2p3.fr/" target="_blank" rel="noopener" class="institute-link">
-          CPPM — Centre de Physique des Particules de Marseille
-        </a>, France
-      </p>
+    
+<header class="hero">
+  <h1>Lucas Saunière</h1>
+  
+  <p class="affiliation">CPPM — Centre de Physique des Particules de Marseille</p>
+</header>
 
-      <!-- Social badge row -->
-      <div class="social-links">
-        <a class="social-link" href="mailto:lucas.sauniere@ipsa.fr">
-          <i class="fa-solid fa-envelope"></i> lucas.sauniere@ipsa.fr
-        </a>
-        <a class="social-link" href="https://github.com/LucasSauniere" target="_blank" rel="noopener">
-          <i class="fa-brands fa-github"></i> GitHub
-        </a>
-        <a class="social-link" href="https://www.linkedin.com/in/lucas-sauniere-27a40b173" target="_blank" rel="noopener">
-          <i class="fa-brands fa-linkedin"></i> LinkedIn
-        </a>
-        <a class="social-link" href="https://orcid.org/0009-0007-0045-2663" target="_blank" rel="noopener">
-          <i class="fa-brands fa-orcid"></i> ORCID
-        </a>
-        <a class="social-link" href="https://dispers.in2p3.fr/index.html" target="_blank" rel="noopener">
-          <i class="fa-solid fa-satellite-dish"></i> DISPERS
-        </a>
-      </div>
-    </section>
+<section>
+  <p>I work on instrumental simulation and machine learning applied to slitless spectroscopy for the Euclid space telescope (ANR DISPERS).</p>
+</section>
 
-    <!-- ── Short bio blurb ── -->
-    <section class="home-blurb">
-      <p>
-        I recently completed my <strong>PhD in Optics, Photonics and Image Processing</strong> at
-        <a href="https://www.cppm.in2p3.fr/" target="_blank" rel="noopener" class="inline-link">CPPM</a>,
-        defended January 29th, 2026. My thesis focused on modeling the instrumental response of the
-        <strong>Euclid NISP instrument</strong> within the
-        <a href="https://dispers.in2p3.fr/index.html" target="_blank" rel="noopener" class="inline-link">DISPERS project</a>,
-        combining <strong>Zernike polynomial analysis</strong> and <strong>deep learning</strong> to
-        characterize optical aberrations from PSF images.
-      </p>
-      <p>
-        I am currently looking for a <strong>postdoc position in Canada or the United States</strong> in
-        optics, computational imaging, or machine learning for science.
-        <a href="mailto:lucas.sauniere@ipsa.fr" class="inline-link">Get in touch!</a>
-      </p>
-    </section>
+<section>
+  <h2>Links</h2>
+  <ul>
+    <li>Email: <a href="mailto:lucas.sauniere@ipsa.fr">lucas.sauniere@ipsa.fr</a></li>
+    <li>ORCID: <a href="https://orcid.org/0009-0007-0045-2663">0009-0007-0045-2663</a></li>
+    <li>GitHub: <a href="https://github.com/LucasSauniere">LucasSauniere</a></li>
+  </ul>
+</section>
 
-    <!-- ── Contact ── -->
-    <section class="contact-section">
-      <h2>Contact</h2>
-      <address>
-        <strong>Lucas Saunière</strong>
-        CPPM — Centre de Physique des Particules de Marseille<br />
-        163 Avenue de Luminy, Case 902<br />
-        13288 Marseille Cedex 09, France<br /><br />
-        Email: <a href="mailto:lucas.sauniere@ipsa.fr">lucas.sauniere@ipsa.fr</a>
-      </address>
-    </section>
+<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+
   </main>
 
+  <footer class="site-footer">
+    © Lucas Saunière — built with Jinja2
+  </footer>
+
   <script src="theme.js"></script>
-  <script>
-    function toggleMenu() {
-      const nav = document.getElementById('mobileNav');
-      const btn = document.getElementById('menuBtn');
-      btn.textContent = nav.classList.toggle('open') ? 'Close' : 'Menu';
-    }
-  </script>
 </body>
 </html>

@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Research — Lucas Saunière</title>
+  <title>{% block title %}{{ profile.name }}{% endblock %}</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="nav-inner">
-      <div class="nav-logo"><a href="index.html">Lucas Saunière</a></div>
+      <div class="nav-logo"><a href="index.html">{{ profile.name }}</a></div>
 
       <ul class="nav-links">
-        <li><a href="index.html"    >Home</a></li>
-        <li><a href="about.html"    >About</a></li>
-        <li><a href="research.html" class="active">Research</a></li>
-        <li><a href="papers.html"   >Publications</a></li>
+        <li><a href="index.html"    {% if active == 'home'     %}class="active"{% endif %}>Home</a></li>
+        <li><a href="about.html"    {% if active == 'about'    %}class="active"{% endif %}>About</a></li>
+        <li><a href="research.html" {% if active == 'research' %}class="active"{% endif %}>Research</a></li>
+        <li><a href="papers.html"   {% if active == 'papers'   %}class="active"{% endif %}>Publications</a></li>
       </ul>
 
       <div class="nav-controls">
@@ -28,38 +28,19 @@
     </div>
 
     <nav class="mobile-nav">
-      <a href="index.html"    >Home</a>
-      <a href="about.html"    >About</a>
-      <a href="research.html" class="active">Research</a>
-      <a href="papers.html"   >Publications</a>
+      <a href="index.html"    {% if active == 'home'     %}class="active"{% endif %}>Home</a>
+      <a href="about.html"    {% if active == 'about'    %}class="active"{% endif %}>About</a>
+      <a href="research.html" {% if active == 'research' %}class="active"{% endif %}>Research</a>
+      <a href="papers.html"   {% if active == 'papers'   %}class="active"{% endif %}>Publications</a>
     </nav>
   </header>
 
   <main>
-    
-<h1 class="page-title">Research</h1>
-
-
-
-  <article class="project-block">
-    <h2>PSF-based aberration retrieval</h2>
-    <p>Deep learning methods to extract Zernike coefficients from under-sampled PSFs.</p>
-    
-  </article>
-  <hr class="divider">
-
-  <article class="project-block">
-    <h2>Euclid NISP calibration</h2>
-    <p>Image persistence modeling for HgCdTe H2RG detectors.</p>
-    
-  </article>
-  
-
-
+    {% block content %}{% endblock %}
   </main>
 
   <footer class="site-footer">
-    © Lucas Saunière — built with Jinja2
+    © {{ profile.name }} — built with Jinja2
   </footer>
 
   <script src="theme.js"></script>

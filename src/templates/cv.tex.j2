@@ -9,12 +9,18 @@
 \section{Awards}
 ((* for a in awards *))
 \cvitem{(((a.year)))}{\textbf{(((a.title)))}. Team led by
-  (((a.leads|join(' and '))). Contribution: (((a.contribution)))}
+  (((a.leads|join(' and ')))). Contribution: (((a.contribution)))}
 ((* endfor *))
 
 \section{Software}
 ((* for s in software *))
 \cvitem{(((s.name)))}{(((s.purpose))) \href{(((s.url)))}{[repo]}}
+((* endfor *))
+
+\section{Publications}
+((* for p in publications *))
+\cvitem{(((p.year)))}{\textbf{(((p.title)))}. \emph{(((p.venue)))}.
+((* if p.doi *)) \href{https://doi.org/(((p.doi)))}{doi:(((p.doi)))}((* endif *))}
 ((* endfor *))
 
 \end{document}

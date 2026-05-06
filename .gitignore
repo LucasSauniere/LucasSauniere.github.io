@@ -1,0 +1,8 @@
+src/build/
+cv/cv.aux
+cv/cv.fls
+cv/cv.log
+cv/cv.out
+cv/cv.fdb_latexmk
+__pycache__/
+.venv/

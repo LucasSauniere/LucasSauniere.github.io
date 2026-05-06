@@ -1,0 +1,33 @@
+{% extends "base.html.j2" %}
+{% set active = 'papers' %}
+{% block title %}Publications — {{ profile.name }}{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Publications</h1>
+
+{% if publications %}
+  {% set years = publications | map(attribute='year') | unique | list | sort(reverse=true) %}
+  {% for year in years %}
+    <h2 class="papers-section-heading">{{ year }}</h2>
+    <ul class="papers-list">
+      {% for p in publications if p.year == year %}
+        <li class="paper">
+          <div class="paper-title">{{ p.title }}</div>
+          <div class="paper-authors">{{ p.authors | safe }}</div>
+          <div class="paper-venue">{{ p.venue }}{% if p.year %}, {{ p.year }}{% endif %}</div>
+          {% if p.get('doi') or p.get('url') or p.get('pdf') or p.get('code') %}
+            <div class="paper-links">
+              {% if p.get('pdf') %}<a class="paper-link" href="{{ p.pdf }}">PDF</a>{% endif %}
+              {% if p.get('doi') %}<a class="paper-link" href="https://doi.org/{{ p.doi }}">DOI</a>{% endif %}
+              {% if p.get('url') %}<a class="paper-link" href="{{ p.url }}">Link</a>{% endif %}
+              {% if p.get('code') %}<a class="paper-link" href="{{ p.code }}">Code</a>{% endif %}
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% else %}
+  <p>No publications yet.</p>
+{% endif %}
+{% endblock %}
