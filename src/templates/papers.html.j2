@@ -1,33 +1,59 @@
+{# filepath: /Users/sauniere/Desktop/Perso/personal_webpage/LucasSauniere.github.io/src/templates/papers.html.j2 #}
 {% extends "base.html.j2" %}
-{% set active = 'papers' %}
-{% block title %}Publications — {{ profile.name }}{% endblock %}
-
+{% block title %}Papers — Lucas Saunière{% endblock %}
 {% block content %}
-<h1 class="page-title">Publications</h1>
+<h1 class="page-title">Papers</h1>
 
-{% if publications %}
-  {% set years = publications | map(attribute='year') | unique | list | sort(reverse=true) %}
-  {% for year in years %}
-    <h2 class="papers-section-heading">{{ year }}</h2>
-    <ul class="papers-list">
-      {% for p in publications if p.year == year %}
-        <li class="paper">
-          <div class="paper-title">{{ p.title }}</div>
-          <div class="paper-authors">{{ p.authors | safe }}</div>
-          <div class="paper-venue">{{ p.venue }}{% if p.year %}, {{ p.year }}{% endif %}</div>
-          {% if p.get('doi') or p.get('url') or p.get('pdf') or p.get('code') %}
-            <div class="paper-links">
-              {% if p.get('pdf') %}<a class="paper-link" href="{{ p.pdf }}">PDF</a>{% endif %}
-              {% if p.get('doi') %}<a class="paper-link" href="https://doi.org/{{ p.doi }}">DOI</a>{% endif %}
-              {% if p.get('url') %}<a class="paper-link" href="{{ p.url }}">Link</a>{% endif %}
-              {% if p.get('code') %}<a class="paper-link" href="{{ p.code }}">Code</a>{% endif %}
-            </div>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+<!-- Journal Articles -->
+<h2 class="papers-section-heading">Journal Articles</h2>
+<ul class="papers-list">
+  {% for p in publications if p.type in ["article", "misc"] %}
+  <li class="paper">
+    <p class="paper-title">{{ p.title }}</p>
+    <p class="paper-authors">{{ p.authors | safe }}</p>
+    <p class="paper-venue">{{ p.venue }} ({{ p.year }})</p>
+    <div class="paper-links">
+      {% if p.doi %}
+        <a class="paper-link" href="https://doi.org/{{ p.doi }}" target="_blank" rel="noopener">DOI</a>
+      {% elif p.url %}
+        <a class="paper-link" href="{{ p.url }}" target="_blank" rel="noopener">Link</a>
+      {% else %}
+        <span class="paper-link" style="border:none;color:var(--text-faint)">Preprint coming soon</span>
+      {% endif %}
+    </div>
+  </li>
   {% endfor %}
-{% else %}
-  <p>No publications yet.</p>
-{% endif %}
+</ul>
+
+<!-- Conference Papers -->
+<h2 class="papers-section-heading">Conference Papers</h2>
+<ul class="papers-list">
+  {% for p in publications if p.type == "inproceedings" %}
+  <li class="paper">
+    <p class="paper-title">{{ p.title }}</p>
+    <p class="paper-authors">{{ p.authors | safe }}</p>
+    <p class="paper-venue">{{ p.venue }} ({{ p.year }})</p>
+    <div class="paper-links">
+      {% if p.doi %}
+        <a class="paper-link" href="https://doi.org/{{ p.doi }}" target="_blank" rel="noopener">DOI</a>
+      {% endif %}
+      {% if p.url %}
+        <a class="paper-link" href="{{ p.url }}" target="_blank" rel="noopener">Link</a>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+
+<!-- Conferences & Talks -->
+<h2 class="papers-section-heading">Conferences &amp; Talks</h2>
+<ul class="papers-list">
+  {% for t in talks %}
+  <li class="paper">
+    <p class="paper-title">{{ t.title }}</p>
+    <p class="paper-authors">{{ t.authors | safe }}</p>
+    <p class="paper-venue">{{ t.venue }}</p>
+  </li>
+  {% endfor %}
+</ul>
 {% endblock %}

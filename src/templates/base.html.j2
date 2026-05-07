@@ -5,33 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ profile.name }}{% endblock %}</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js via import map (used by euclid.js) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="page-{{ active }}">
+
   <header class="site-header">
     <div class="nav-inner">
       <div class="nav-logo"><a href="index.html">{{ profile.name }}</a></div>
 
-      <ul class="nav-links">
-        <li><a href="index.html"    {% if active == 'home'     %}class="active"{% endif %}>Home</a></li>
-        <li><a href="about.html"    {% if active == 'about'    %}class="active"{% endif %}>About</a></li>
-        <li><a href="research.html" {% if active == 'research' %}class="active"{% endif %}>Research</a></li>
-        <li><a href="papers.html"   {% if active == 'papers'   %}class="active"{% endif %}>Publications</a></li>
-      </ul>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html"    class="{% if active == 'home'     %}active{% endif %}">Home</a></li>
+          <li><a href="about.html"    class="{% if active == 'about'    %}active{% endif %}">About</a></li>
+          <li><a href="research.html" class="{% if active == 'research' %}active{% endif %}">Research</a></li>
+          <li><a href="papers.html"   class="{% if active == 'papers'   %}active{% endif %}">Papers</a></li>
+        </ul>
+      </nav>
 
       <div class="nav-controls">
-        <button class="theme-btn" aria-label="Toggle theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <button id="themeBtn" class="theme-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
         </button>
-        <button class="menu-btn" aria-expanded="false">Menu</button>
+        <button id="menuBtn" class="menu-btn" aria-label="Menu">Menu</button>
       </div>
     </div>
 
-    <nav class="mobile-nav">
-      <a href="index.html"    {% if active == 'home'     %}class="active"{% endif %}>Home</a>
-      <a href="about.html"    {% if active == 'about'    %}class="active"{% endif %}>About</a>
-      <a href="research.html" {% if active == 'research' %}class="active"{% endif %}>Research</a>
-      <a href="papers.html"   {% if active == 'papers'   %}class="active"{% endif %}>Publications</a>
+    <nav id="mobileNav" class="mobile-nav">
+      <a href="index.html"    class="{% if active == 'home'     %}active{% endif %}">Home</a>
+      <a href="about.html"    class="{% if active == 'about'    %}active{% endif %}">About</a>
+      <a href="research.html" class="{% if active == 'research' %}active{% endif %}">Research</a>
+      <a href="papers.html"   class="{% if active == 'papers'   %}active{% endif %}">Papers</a>
     </nav>
   </header>
 
@@ -39,10 +54,13 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer">
-    © {{ profile.name }} — built with Jinja2
-  </footer>
+  <footer class="site-footer">© {{ profile.name }}</footer>
+
+  <!-- GSAP (load once, globally) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <script src="theme.js"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

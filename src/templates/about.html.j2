@@ -1,25 +1,59 @@
+{# filepath: /Users/sauniere/Desktop/Perso/personal_webpage/LucasSauniere.github.io/src/templates/about.html.j2 #}
 {% extends "base.html.j2" %}
-{% set active = 'about' %}
-{% block title %}About — {{ profile.name }}{% endblock %}
-
+{% block title %}About Me — {{ profile.name }}{% endblock %}
 {% block content %}
-<h1 class="page-title">{{ profile.name }}</h1>
-<p>{{ profile.bio_short }}</p>
+<h1 class="page-title">About Me</h1>
+<div class="page-body">
 
-<h2>Awards</h2>
-<ul>
-  {% for a in awards %}
-    <li><strong>{{ a.year }} — {{ a.title }}</strong>.
-        {{ a.contribution }}</li>
-  {% endfor %}
-</ul>
+  <div class="about-intro">
+    <div class="about-intro-text">
+      {% for p in profile.intro %}
+      <p>{{ p | safe }}</p>
+      {% endfor %}
+    </div>
+    <img src="{{ profile.photo }}" alt="Photo of {{ profile.name }}" class="about-photo" />
+  </div>
 
-<h2>Software</h2>
-<ul>
-  {% for s in software %}
-    <li><a href="{{ s.url }}">{{ s.name }}</a> — {{ s.purpose }}</li>
-  {% endfor %}
-</ul>
+  <h2>Research interests</h2>
+  <ul class="bullet-list">
+    {% for item in profile.research_interests %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
 
-<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+  <h2>Education</h2>
+  <ul class="bullet-list">
+    {% for e in profile.education %}
+    <li>
+      <strong>{{ e.degree }}</strong>{% if e.institution %} — {{ e.institution }}{% endif %}, {{ e.years }}
+      {% if e.details %}<br/><em>{{ e.details }}</em>{% endif %}
+      {% if e.supervisors %}<br/>Supervisors: {{ e.supervisors }}{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Work experience</h2>
+  <ul class="bullet-list">
+    {% for x in profile.experience %}
+    <li>
+      <strong>{{ x.title }}</strong> — {{ x.org }}, {{ x.year }}<br/>
+      {{ x.details }}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="bullet-list">
+    {% for s in profile.skills %}
+    <li>{{ s | safe }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Beyond research</h2>
+  <p>{{ profile.beyond_research | safe }}</p>
+
+  <h2>Looking for a postdoc</h2>
+  <p>{{ profile.postdoc | safe }}</p>
+
+</div>
 {% endblock %}

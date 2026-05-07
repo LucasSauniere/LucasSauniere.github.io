@@ -10,11 +10,44 @@ OUT  = ROOT
 (SRC / "build").mkdir(parents=True, exist_ok=True)
 (ROOT / "cv").mkdir(parents=True, exist_ok=True)
 
+def format_authors(raw: str) -> str:
+    """Show all authors if ≤10, otherwise show up to and including Sauniere then 'et al.'"""
+    if " and " in raw:
+        parts = [a.strip() for a in raw.split(" and ")]
+    else:
+        parts = [a.strip() for a in raw.split(",")]
+
+    # Bold my name wherever it appears
+    formatted = []
+    for author in parts:
+        if "Sauniere" in author or "Saunière" in author:
+            formatted.append("<b>L. Saunière</b>")
+        else:
+            formatted.append(author)
+
+    if len(parts) <= 10:
+        return ", ".join(formatted)
+
+    # More than 10 authors: truncate after my name
+    result = []
+    for author, fmt in zip(parts, formatted):
+        result.append(fmt)
+        if "Sauniere" in author or "Saunière" in author:
+            if author != parts[-1]:
+                result.append("et al.")
+            break
+    else:
+        # Sauniere not found — show first 3 + et al.
+        result = formatted[:3] + (["et al."] if len(parts) > 3 else [])
+
+    return ", ".join(result)
 
 def normalize_publication(entry: dict) -> dict:
     """Map raw BibTeX fields to the keys used in templates."""
     venue = entry.get("journal") or entry.get("booktitle") or entry.get("publisher") or ""
-    authors = entry.get("author", "").replace(" and ", ", ")
+    raw_authors = entry.get("author", "")
+    authors = format_authors(raw_authors)
+    # authors = entry.get("author", "").replace(" and ", ", ")
     return {
         "id":       entry.get("ID", ""),
         "type":     entry.get("ENTRYTYPE", ""),
@@ -34,6 +67,13 @@ for yml in (SRC / "data").glob("*.yml"):
     loaded = yaml.safe_load(yml.read_text()) or []
     data[yml.stem] = loaded
 
+# debug: show top-level keys per file
+for k, v in data.items():
+    if isinstance(v, dict):
+        print(f"  {k}.yml keys: {list(v.keys())}")
+    else:
+        print(f"  {k}.yml: {type(v).__name__} (len={len(v)})")
+
 # 2. Load + normalize publications
 bib_path = SRC / "data" / "publications.bib"
 if bib_path.exists():
@@ -52,11 +92,20 @@ env_html = Environment(
     autoescape=True,
     undefined=StrictUndefined,   # fail loudly on missing vars
 )
+page_active = {
+    "index.html.j2":    "home",
+    "about.html.j2":    "about",
+    "research.html.j2": "research",
+    "papers.html.j2":   "papers",
+}
 for tpl in (SRC / "templates").glob("*.html.j2"):
     if tpl.name.startswith("base"):
-        continue  # base.html.j2 is a layout template, not a standalone page
+        continue
     name = tpl.name.replace(".j2", "")
-    rendered = env_html.get_template(tpl.name).render(**data)
+    rendered = env_html.get_template(tpl.name).render(
+        **data,
+        active=page_active.get(tpl.name, "")
+    )
     (OUT / name).write_text(rendered)
     print(f"  wrote {name}")
 

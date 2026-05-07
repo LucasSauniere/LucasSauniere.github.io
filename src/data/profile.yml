@@ -1,12 +1,68 @@
-name: Lucas Saunière
-title: PhD in Optics, Photonics & Image Processing
-affiliation: CPPM — Centre de Physique des Particules de Marseille
-email: lucas.sauniere@ipsa.fr
-orcid: 0009-0007-0045-2663
-github: LucasSauniere
-linkedin: lucas-sauniere-27a40b173
-researchgate: Lucas-Sauniere-2290438770
-bio_short: >
-  I work on instrumental simulation and machine learning applied to
-  slitless spectroscopy for the Euclid space telescope (ANR DISPERS).
+name: "Lucas Saunière"
+title: "Doctor in Optics, Photonics & Image Processing"
+affiliation: "CPPM — Centre de Physique des Particules de Marseille"
+location: "Marseille, France"
+email: "lucas.sauniere@ipsa.fr"
+photo: "transp.png"
+
+bio_short: "Doctor in Optics, Photonics & Image Processing. My work sits at the intersection of optical instrumentation, image processing, and machine learning, with a focus on space science applications."
+
 cv_pdf: "cv/cv.pdf"
+
+research_interests:
+  - "Optical systems & space instrumentation (telescopes, optronics)"
+  - "Image processing & computational imaging"
+  - "Machine learning and deep learning for scientific applications"
+  - "Computer vision & remote sensing"
+  - "Signal processing"
+
+education:
+  - degree: "PhD in Optics, Optronics and Image Processing"
+    institution: "CPPM, Marseille"
+    years: "2022-2026"
+    details: "Thesis: Modeling the instrumental response of the Euclid NISP instrument"
+    supervisors: "W. Gillard, J. Zoubian"
+  - degree: "Master's Degree in Space Engineering (Space, Launchers & Satellites)"
+    institution: "IPSA, Paris"
+    years: "2020-2022"
+    details: ""
+    supervisors: ""
+  - degree: "CPGE MPSI/MP — Mathematics, Physics & Engineering Sciences"
+    institution: ""
+    years: "2017-2019"
+    details: ""
+    supervisors: ""
+
+experience:
+  - title: "Data Processing Engineer Intern"
+    org: "CNES (French Space Agency)"
+    year: "2022"
+    details: "IASI-NG interferometer performance & spectral calibration algorithms aboard METOP-SG"
+  - title: "Research Assistant"
+    org: "Observatory of Geneva"
+    year: "2021"
+    details: "Solar system dynamics — Mars ephemerides, Mars Express / ExoMars data analysis"
+  - title: "Research Assistant"
+    org: "IRAP, Tarbes"
+    year: "2020"
+    details: "High-resolution spectropolarimetry of Beta Coronae Borealis with NEO-NARVAL"
+
+skills:
+  - "<strong>Programming:</strong> Python, Jupyter, MATLAB / Simulink"
+  - "<strong>Deep learning:</strong> PyTorch, TensorFlow/Keras (CNNs, autoencoders, MLPs)"
+  - "<strong>Scientific computing:</strong> NumPy, SciPy, Astropy, scikit-learn, OpenCV"
+  - "<strong>CAD & FEA:</strong> CATIA V5, Patran/Nastran"
+  - "<strong>Languages:</strong> French (native), English (C1), Spanish (beginner)"
+
+social:
+  github: "https://github.com/LucasSauniere"
+  linkedin: ""
+  orcid: ""
+
+intro:
+  - "I am a <strong>Doctor in Optics, Photonics and Image Processing</strong>, having defended my PhD thesis on January 29th, 2026, at the <a href='https://www.cppm.in2p3.fr/' target='_blank' rel='noopener'>Centre de Physique des Particules de Marseille (CPPM)</a>, France. My work comes at the intersection of <strong>optical instrumentation</strong>, <strong>image processing</strong>, and <strong>machine learning</strong>, with a strong focus on space science applications."
+  - "My PhD focused on <strong>modeling the instrumental response of the <a href='https://www.esa.int/Science_Exploration/Space_Science/Euclid' target='_blank' rel='noopener'>Euclid</a> NISP instrument</strong>, within the <strong><a href='https://dispers.in2p3.fr/index.html' target='_blank' rel='noopener'>DISPERS project</a></strong>. I developed methods combining <strong>Zernike polynomial decomposition</strong> and <strong>deep learning</strong> to characterize optical aberrations from PSFs."
+
+beyond_research: "I enjoy applying AI and machine learning to diverse and creative problems. I am also a passionate astronomer and former <strong>Vice-President of the IPSA VEGA astronomy association</strong>, where I contributed to data analysis from Kepler/K2 and TESS missions and taught astrophotography to fellow students."
+
+postdoc: "I am currently seeking a <strong>postdoc position in Canada or the United States</strong> in optical systems, computational imaging, machine learning for science, or space instrumentation. Feel free to <a href='mailto:lucas.sauniere@ipsa.fr'>reach out</a> — I would love to discuss opportunities!"

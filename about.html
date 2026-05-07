@@ -1,72 +1,162 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About — Lucas Saunière</title>
+  <title>About Me — Lucas Saunière</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js via import map (used by euclid.js) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="page-about">
+
   <header class="site-header">
     <div class="nav-inner">
       <div class="nav-logo"><a href="index.html">Lucas Saunière</a></div>
 
-      <ul class="nav-links">
-        <li><a href="index.html"    >Home</a></li>
-        <li><a href="about.html"    class="active">About</a></li>
-        <li><a href="research.html" >Research</a></li>
-        <li><a href="papers.html"   >Publications</a></li>
-      </ul>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html"    class="">Home</a></li>
+          <li><a href="about.html"    class="active">About</a></li>
+          <li><a href="research.html" class="">Research</a></li>
+          <li><a href="papers.html"   class="">Papers</a></li>
+        </ul>
+      </nav>
 
       <div class="nav-controls">
-        <button class="theme-btn" aria-label="Toggle theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <button id="themeBtn" class="theme-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
         </button>
-        <button class="menu-btn" aria-expanded="false">Menu</button>
+        <button id="menuBtn" class="menu-btn" aria-label="Menu">Menu</button>
       </div>
     </div>
 
-    <nav class="mobile-nav">
-      <a href="index.html"    >Home</a>
+    <nav id="mobileNav" class="mobile-nav">
+      <a href="index.html"    class="">Home</a>
       <a href="about.html"    class="active">About</a>
-      <a href="research.html" >Research</a>
-      <a href="papers.html"   >Publications</a>
+      <a href="research.html" class="">Research</a>
+      <a href="papers.html"   class="">Papers</a>
     </nav>
   </header>
 
   <main>
     
-<h1 class="page-title">Lucas Saunière</h1>
-<p>I work on instrumental simulation and machine learning applied to slitless spectroscopy for the Euclid space telescope (ANR DISPERS).</p>
+<h1 class="page-title">About Me</h1>
+<div class="page-body">
 
-<h2>Awards</h2>
-<ul>
-  
-    <li><strong>2024 — Euclid STAR Prize — Team Technical/Engineering Award</strong>.
-        NISP filter wheel alignment and optical centering checks during the commissioning phase.</li>
-  
-</ul>
+  <div class="about-intro">
+    <div class="about-intro-text">
+      
+      <p>I am a <strong>Doctor in Optics, Photonics and Image Processing</strong>, having defended my PhD thesis on January 29th, 2026, at the <a href='https://www.cppm.in2p3.fr/' target='_blank' rel='noopener'>Centre de Physique des Particules de Marseille (CPPM)</a>, France. My work comes at the intersection of <strong>optical instrumentation</strong>, <strong>image processing</strong>, and <strong>machine learning</strong>, with a strong focus on space science applications.</p>
+      
+      <p>My PhD focused on <strong>modeling the instrumental response of the <a href='https://www.esa.int/Science_Exploration/Space_Science/Euclid' target='_blank' rel='noopener'>Euclid</a> NISP instrument</strong>, within the <strong><a href='https://dispers.in2p3.fr/index.html' target='_blank' rel='noopener'>DISPERS project</a></strong>. I developed methods combining <strong>Zernike polynomial decomposition</strong> and <strong>deep learning</strong> to characterize optical aberrations from PSFs.</p>
+      
+    </div>
+    <img src="transp.png" alt="Photo of Lucas Saunière" class="about-photo" />
+  </div>
 
-<h2>Software</h2>
-<ul>
-  
-    <li><a href="https://gitlab.in2p3.fr/dispers/psfcraft">psfcraft</a> — PSF simulation for the NISP instrument</li>
-  
-    <li><a href="https://gitlab.in2p3.fr/dispers/psfzernet">zernet</a> — Zernike coefficient extraction from pure (noiseless) PSFs</li>
-  
-    <li><a href="https://gitlab.in2p3.fr/dispers/spread">spread</a> — Zernike coefficient extraction from noisy PSFs</li>
-  
-</ul>
+  <h2>Research interests</h2>
+  <ul class="bullet-list">
+    
+    <li>Optical systems &amp; space instrumentation (telescopes, optronics)</li>
+    
+    <li>Image processing &amp; computational imaging</li>
+    
+    <li>Machine learning and deep learning for scientific applications</li>
+    
+    <li>Computer vision &amp; remote sensing</li>
+    
+    <li>Signal processing</li>
+    
+  </ul>
 
-<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+  <h2>Education</h2>
+  <ul class="bullet-list">
+    
+    <li>
+      <strong>PhD in Optics, Optronics and Image Processing</strong> — CPPM, Marseille, 2022-2026
+      <br/><em>Thesis: Modeling the instrumental response of the Euclid NISP instrument</em>
+      <br/>Supervisors: W. Gillard, J. Zoubian
+    </li>
+    
+    <li>
+      <strong>Master&#39;s Degree in Space Engineering (Space, Launchers &amp; Satellites)</strong> — IPSA, Paris, 2020-2022
+      
+      
+    </li>
+    
+    <li>
+      <strong>CPGE MPSI/MP — Mathematics, Physics &amp; Engineering Sciences</strong>, 2017-2019
+      
+      
+    </li>
+    
+  </ul>
+
+  <h2>Work experience</h2>
+  <ul class="bullet-list">
+    
+    <li>
+      <strong>Data Processing Engineer Intern</strong> — CNES (French Space Agency), 2022<br/>
+      IASI-NG interferometer performance &amp; spectral calibration algorithms aboard METOP-SG
+    </li>
+    
+    <li>
+      <strong>Research Assistant</strong> — Observatory of Geneva, 2021<br/>
+      Solar system dynamics — Mars ephemerides, Mars Express / ExoMars data analysis
+    </li>
+    
+    <li>
+      <strong>Research Assistant</strong> — IRAP, Tarbes, 2020<br/>
+      High-resolution spectropolarimetry of Beta Coronae Borealis with NEO-NARVAL
+    </li>
+    
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="bullet-list">
+    
+    <li><strong>Programming:</strong> Python, Jupyter, MATLAB / Simulink</li>
+    
+    <li><strong>Deep learning:</strong> PyTorch, TensorFlow/Keras (CNNs, autoencoders, MLPs)</li>
+    
+    <li><strong>Scientific computing:</strong> NumPy, SciPy, Astropy, scikit-learn, OpenCV</li>
+    
+    <li><strong>CAD & FEA:</strong> CATIA V5, Patran/Nastran</li>
+    
+    <li><strong>Languages:</strong> French (native), English (C1), Spanish (beginner)</li>
+    
+  </ul>
+
+  <h2>Beyond research</h2>
+  <p>I enjoy applying AI and machine learning to diverse and creative problems. I am also a passionate astronomer and former <strong>Vice-President of the IPSA VEGA astronomy association</strong>, where I contributed to data analysis from Kepler/K2 and TESS missions and taught astrophotography to fellow students.</p>
+
+  <h2>Looking for a postdoc</h2>
+  <p>I am currently seeking a <strong>postdoc position in Canada or the United States</strong> in optical systems, computational imaging, machine learning for science, or space instrumentation. Feel free to <a href='mailto:lucas.sauniere@ipsa.fr'>reach out</a> — I would love to discuss opportunities!</p>
+
+</div>
 
   </main>
 
-  <footer class="site-footer">
-    © Lucas Saunière — built with Jinja2
-  </footer>
+  <footer class="site-footer">© Lucas Saunière</footer>
+
+  <!-- GSAP (load once, globally) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <script src="theme.js"></script>
+  
 </body>
 </html>

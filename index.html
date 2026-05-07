@@ -5,65 +5,155 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lucas Saunière</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js via import map (used by euclid.js) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="page-home">
+
   <header class="site-header">
     <div class="nav-inner">
       <div class="nav-logo"><a href="index.html">Lucas Saunière</a></div>
 
-      <ul class="nav-links">
-        <li><a href="index.html"    class="active">Home</a></li>
-        <li><a href="about.html"    >About</a></li>
-        <li><a href="research.html" >Research</a></li>
-        <li><a href="papers.html"   >Publications</a></li>
-      </ul>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html"    class="active">Home</a></li>
+          <li><a href="about.html"    class="">About</a></li>
+          <li><a href="research.html" class="">Research</a></li>
+          <li><a href="papers.html"   class="">Papers</a></li>
+        </ul>
+      </nav>
 
       <div class="nav-controls">
-        <button class="theme-btn" aria-label="Toggle theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <button id="themeBtn" class="theme-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
         </button>
-        <button class="menu-btn" aria-expanded="false">Menu</button>
+        <button id="menuBtn" class="menu-btn" aria-label="Menu">Menu</button>
       </div>
     </div>
 
-    <nav class="mobile-nav">
+    <nav id="mobileNav" class="mobile-nav">
       <a href="index.html"    class="active">Home</a>
-      <a href="about.html"    >About</a>
-      <a href="research.html" >Research</a>
-      <a href="papers.html"   >Publications</a>
+      <a href="about.html"    class="">About</a>
+      <a href="research.html" class="">Research</a>
+      <a href="papers.html"   class="">Papers</a>
     </nav>
   </header>
 
   <main>
     
-<header class="hero">
-  <h1>Lucas Saunière</h1>
-  
-  <p class="affiliation">CPPM — Centre de Physique des Particules de Marseille</p>
-</header>
 
-<section>
-  <p>I work on instrumental simulation and machine learning applied to slitless spectroscopy for the Euclid space telescope (ANR DISPERS).</p>
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero-section">
+  <canvas id="starfield"></canvas>
+  <div class="hero-text">
+    <h1 class="hero-name">Lucas Saunière</h1>
+    <p class="hero-title">Doctor in Optics, Photonics &amp; Image Processing</p>
+    <p class="hero-affiliation">CPPM — Centre de Physique des Particules de Marseille</p>
+    <div>
+      <a href="research.html" class="hero-btn">View research</a>
+      <a href="papers.html"   class="hero-btn outline">Publications</a>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ scroll</div>
 </section>
 
-<section>
-  <h2>Links</h2>
-  <ul>
-    <li>Email: <a href="mailto:lucas.sauniere@ipsa.fr">lucas.sauniere@ipsa.fr</a></li>
-    <li>ORCID: <a href="https://orcid.org/0009-0007-0045-2663">0009-0007-0045-2663</a></li>
-    <li>GitHub: <a href="https://github.com/LucasSauniere">LucasSauniere</a></li>
-  </ul>
+<!-- ── PSF SECTION ──────────────────────────────────────────────── -->
+<section id="psf-section" class="scroll-section">
+  <div class="scroll-section-inner">
+    <div class="psf-visual">
+      <canvas id="psfCanvas" width="200" height="200"></canvas>
+      <span class="psf-label">Aberrated PSF</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Point Spread Functions</h2>
+      <p>
+        Every star seen through a telescope is blurred by its optics. The
+        shape of that blur — the <em>PSF</em> — encodes the instrument's
+        aberrations: defocus, astigmatism, coma, higher-order wavefront
+        errors. Scroll to simulate correction.
+      </p>
+    </div>
+  </div>
 </section>
 
-<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+<!-- ── NETWORK SECTION ──────────────────────────────────────────── -->
+<section id="network-section" class="scroll-section">
+  <div class="scroll-section-inner reverse">
+    <div class="network-visual">
+      <canvas id="networkCanvas" width="360" height="260"></canvas>
+      <span class="psf-label">CNN → Zernike coefficients</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Learning the wavefront</h2>
+      <p>
+        A convolutional network takes a noisy PSF cutout and predicts the
+        Zernike coefficients of the underlying wavefront. The layers light
+        up as the signal propagates forward.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ZERNIKE SECTION ──────────────────────────────────────────── -->
+<section id="zernike-section" class="scroll-section">
+  <div class="scroll-section-inner">
+    <div class="zernike-visual">
+      <canvas id="zernikeCanvas" width="360" height="240"></canvas>
+      <span class="psf-label">Predicted Zernike amplitudes</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Zernike decomposition</h2>
+      <p>
+        The network's output is a compact, physically meaningful vector:
+        defocus (Z₄), astigmatism (Z₅/Z₆), coma (Z₇/Z₈), spherical (Z₁₁)…
+        Each coefficient is an RMS wavefront error in nanometres.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── EUCLID SECTION (pinned Three.js) ─────────────────────────── -->
+<section id="euclid-section" class="euclid-section">
+  <div class="euclid-pin">
+    <canvas id="euclidCanvas"></canvas>
+    <div class="scroll-section-inner">
+      <div class="scroll-section-text centered">
+        <h2>Applied to Euclid</h2>
+        <p>
+          The method is deployed on ESA's Euclid mission, recovering the PSF
+          across a 0.53 deg² focal plane for weak-lensing cosmology.
+        </p>
+        <div class="hero-links">
+          <a href="research.html" class="hero-btn">Read more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
   </main>
 
-  <footer class="site-footer">
-    © Lucas Saunière — built with Jinja2
-  </footer>
+  <footer class="site-footer">© Lucas Saunière</footer>
+
+  <!-- GSAP (load once, globally) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <script src="theme.js"></script>
+  
+<script type="module" src="animations.js"></script>
+
 </body>
 </html>

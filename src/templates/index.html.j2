@@ -1,26 +1,100 @@
 {% extends "base.html.j2" %}
-{% set active = 'home' %}
+{% set active = "home" %}
 {% block title %}{{ profile.name }}{% endblock %}
 
 {% block content %}
-<header class="hero">
-  <h1>{{ profile.name }}</h1>
-  {% if profile.get('role') %}<p class="role">{{ profile.role }}</p>{% endif %}
-  {% if profile.get('affiliation') %}<p class="affiliation">{{ profile.affiliation }}</p>{% endif %}
-</header>
 
-<section>
-  <p>{{ profile.bio_short }}</p>
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero-section">
+  <canvas id="starfield"></canvas>
+  <div class="hero-text">
+    <h1 class="hero-name">{{ profile.name }}</h1>
+    <p class="hero-title">{{ profile.title }}</p>
+    <p class="hero-affiliation">{{ profile.affiliation }}</p>
+    <div>
+      <a href="research.html" class="hero-btn">View research</a>
+      <a href="papers.html"   class="hero-btn outline">Publications</a>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ scroll</div>
 </section>
 
-<section>
-  <h2>Links</h2>
-  <ul>
-    {% if profile.get('email') %}<li>Email: <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
-    {% if profile.get('orcid') %}<li>ORCID: <a href="https://orcid.org/{{ profile.orcid }}">{{ profile.orcid }}</a></li>{% endif %}
-    {% if profile.get('github') %}<li>GitHub: <a href="https://github.com/{{ profile.github }}">{{ profile.github }}</a></li>{% endif %}
-  </ul>
+<!-- ── PSF SECTION ──────────────────────────────────────────────── -->
+<section id="psf-section" class="scroll-section">
+  <div class="scroll-section-inner">
+    <div class="psf-visual">
+      <canvas id="psfCanvas" width="200" height="200"></canvas>
+      <span class="psf-label">Aberrated PSF</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Point Spread Functions</h2>
+      <p>
+        Every star seen through a telescope is blurred by its optics. The
+        shape of that blur — the <em>PSF</em> — encodes the instrument's
+        aberrations: defocus, astigmatism, coma, higher-order wavefront
+        errors. Scroll to simulate correction.
+      </p>
+    </div>
+  </div>
 </section>
 
-<p><a href="cv/LucasSauniere_CV.pdf">Download CV (PDF)</a></p>
+<!-- ── NETWORK SECTION ──────────────────────────────────────────── -->
+<section id="network-section" class="scroll-section">
+  <div class="scroll-section-inner reverse">
+    <div class="network-visual">
+      <canvas id="networkCanvas" width="360" height="260"></canvas>
+      <span class="psf-label">CNN → Zernike coefficients</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Learning the wavefront</h2>
+      <p>
+        A convolutional network takes a noisy PSF cutout and predicts the
+        Zernike coefficients of the underlying wavefront. The layers light
+        up as the signal propagates forward.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ZERNIKE SECTION ──────────────────────────────────────────── -->
+<section id="zernike-section" class="scroll-section">
+  <div class="scroll-section-inner">
+    <div class="zernike-visual">
+      <canvas id="zernikeCanvas" width="360" height="240"></canvas>
+      <span class="psf-label">Predicted Zernike amplitudes</span>
+    </div>
+    <div class="scroll-section-text">
+      <h2>Zernike decomposition</h2>
+      <p>
+        The network's output is a compact, physically meaningful vector:
+        defocus (Z₄), astigmatism (Z₅/Z₆), coma (Z₇/Z₈), spherical (Z₁₁)…
+        Each coefficient is an RMS wavefront error in nanometres.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── EUCLID SECTION (pinned Three.js) ─────────────────────────── -->
+<section id="euclid-section" class="euclid-section">
+  <div class="euclid-pin">
+    <canvas id="euclidCanvas"></canvas>
+    <div class="scroll-section-inner">
+      <div class="scroll-section-text centered">
+        <h2>Applied to Euclid</h2>
+        <p>
+          The method is deployed on ESA's Euclid mission, recovering the PSF
+          across a 0.53 deg² focal plane for weak-lensing cosmology.
+        </p>
+        <div class="hero-links">
+          <a href="research.html" class="hero-btn">Read more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="animations.js"></script>
 {% endblock %}

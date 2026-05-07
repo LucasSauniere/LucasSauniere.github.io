@@ -1,154 +1,189 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Publications — Lucas Saunière</title>
+  <title>Papers — Lucas Saunière</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js via import map (used by euclid.js) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="page-papers">
+
   <header class="site-header">
     <div class="nav-inner">
       <div class="nav-logo"><a href="index.html">Lucas Saunière</a></div>
 
-      <ul class="nav-links">
-        <li><a href="index.html"    >Home</a></li>
-        <li><a href="about.html"    >About</a></li>
-        <li><a href="research.html" >Research</a></li>
-        <li><a href="papers.html"   class="active">Publications</a></li>
-      </ul>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html"    class="">Home</a></li>
+          <li><a href="about.html"    class="">About</a></li>
+          <li><a href="research.html" class="">Research</a></li>
+          <li><a href="papers.html"   class="active">Papers</a></li>
+        </ul>
+      </nav>
 
       <div class="nav-controls">
-        <button class="theme-btn" aria-label="Toggle theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <button id="themeBtn" class="theme-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
         </button>
-        <button class="menu-btn" aria-expanded="false">Menu</button>
+        <button id="menuBtn" class="menu-btn" aria-label="Menu">Menu</button>
       </div>
     </div>
 
-    <nav class="mobile-nav">
-      <a href="index.html"    >Home</a>
-      <a href="about.html"    >About</a>
-      <a href="research.html" >Research</a>
-      <a href="papers.html"   class="active">Publications</a>
+    <nav id="mobileNav" class="mobile-nav">
+      <a href="index.html"    class="">Home</a>
+      <a href="about.html"    class="">About</a>
+      <a href="research.html" class="">Research</a>
+      <a href="papers.html"   class="active">Papers</a>
     </nav>
   </header>
 
   <main>
     
-<h1 class="page-title">Publications</h1>
+<h1 class="page-title">Papers</h1>
 
+<!-- Journal Articles -->
+<h2 class="papers-section-heading">Journal Articles</h2>
+<ul class="papers-list">
+  
+  <li class="paper">
+    <p class="paper-title">Spread: a framework for PSF-based aberration analysis</p>
+    <p class="paper-authors"><b>L. Saunière</b>, Gillard, W., Zoubian, J.</p>
+    <p class="paper-venue">Journal of Optics \&amp; Laser Technology (2026)</p>
+    <div class="paper-links">
+      
+        <a class="paper-link" href="https://doi.org/10.2139/ssrn.6544752" target="_blank" rel="noopener">DOI</a>
+      
+    </div>
+  </li>
+  
+  <li class="paper">
+    <p class="paper-title">Euclid: I. Overview of the Euclid mission</p>
+    <p class="paper-authors">Mellier, Y., Abdurro'uf, Acevedo-Barroso, Javier, et al.</p>
+    <p class="paper-venue">Astronomy \&amp; Astrophysics (2025)</p>
+    <div class="paper-links">
+      
+        <a class="paper-link" href="https://doi.org/10.1051/0004-6361/202450810" target="_blank" rel="noopener">DOI</a>
+      
+    </div>
+  </li>
+  
+</ul>
 
+<!-- Conference Papers -->
+<h2 class="papers-section-heading">Conference Papers</h2>
+<ul class="papers-list">
   
+  <li class="paper">
+    <p class="paper-title">Performance of the image persistence model for Euclid infrared detectors</p>
+    <p class="paper-authors">B. Kubik, R. Barbier, G. Smadja, S. Ferriol, Y. Conseil, Y. Copin, W. Gillard, S. Dusini, K. Jahnke, E. Prieto, N. Auricchio, E. Balbi, A. Balestra, P. Battaglia, V. Capobianco, R. Chary, L. Corcione, F. Cogato, G. Delucchi, E. Franceschi, L. Gabarra, F. Gianotti, F. Grupp, E. Lentini, S. Ligori, E. Medinaceli, G. Morgante, K. Paterson, E. Romelli, <b>L. Saunière</b>, et al.</p>
+    <p class="paper-venue"> (2024)</p>
+    <div class="paper-links">
+      
+        <a class="paper-link" href="https://doi.org/10.1117/12.3014312" target="_blank" rel="noopener">DOI</a>
+      
+      
+    </div>
+  </li>
   
-    <h2 class="papers-section-heading">2026</h2>
-    <ul class="papers-list">
+  <li class="paper">
+    <p class="paper-title">Euclid near infrared spectrometer and photometer instrument NISP in space</p>
+    <p class="paper-authors">W. Gillard, S. Dusini, K. Jahnke, E. Prieto, N. Auricchio, R. Barbier, E. Balbi, A. Balestra, P. Battaglia, V. Capobianco, R. Chary, L. Corcione, F. Cogato, G. Delucchi, S. Ferriol, E. Franceschi, L. Gabarra, F. Gianotti, F. Grupp, E. Lentini, S. Ligori, E. Medinaceli, G. Morgante, K. Paterson, E. Romelli, <b>L. Saunière</b>, et al.</p>
+    <p class="paper-venue"> (2024)</p>
+    <div class="paper-links">
       
-        <li class="paper">
-          <div class="paper-title">Spread: a framework for {PSF}-based aberration analysis</div>
-          <div class="paper-authors">Sauniere, Lucas, Gillard, William, Zoubian, Julien</div>
-          <div class="paper-venue">, 2026</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.2139/ssrn.6544752">DOI</a>
-              
-              
-            </div>
-          
-        </li>
+        <a class="paper-link" href="https://doi.org/10.1117/12.3017391" target="_blank" rel="noopener">DOI</a>
       
-    </ul>
+      
+    </div>
+  </li>
   
-    <h2 class="papers-section-heading">2025</h2>
-    <ul class="papers-list">
+  <li class="paper">
+    <p class="paper-title">Euclid commissioning results: the near infrared spectrometer and photometer (NISP) signal detection chain</p>
+    <p class="paper-authors">F. Cogato, E. Medinaceli Villegas, R. Barbier, S. Dusini, W. Gillard, K. Jahnke, N. Auricchio, E. Balbi, A. Balestra, P. Battaglia, D. Bonino, V. Capobianco, R. Chary, S. Conseil, L. Corcione, G. Delucchi, R. Farinelli, S. Ferriol, E. Franceschi, L. Gabarra, F. Gianotti, F. Grupp, E. Lentini, S. Ligori, G. Morgante, K. Paterson, E. Romelli, <b>L. Saunière</b>, et al.</p>
+    <p class="paper-venue"> (2024)</p>
+    <div class="paper-links">
       
-        <li class="paper">
-          <div class="paper-title">Euclid: {I}. {Overview} of the {Euclid} mission</div>
-          <div class="paper-authors">Mellier, Y., {Abdurro’uf}, Acevedo-Barroso, Javier, Achúcarro, A., Adamek, J., Adam, Ramzi, Addison, G., Aghanim, N., Aguena, M., Ajani, V., Akrami, Yashar, Al-Bahlawan, A., Alavi, Anahita, Albuquerque, I., Alestas, George, Alguero, G., Allaoui, A., Allen, S., Allevato, V., Zumalacarregui, Miguel</div>
-          <div class="paper-venue">Astronomy \&amp; Astrophysics, 2025</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.1051/0004-6361/202450810">DOI</a>
-              
-              
-            </div>
-          
-        </li>
+        <a class="paper-link" href="https://doi.org/10.1117/12.3017952" target="_blank" rel="noopener">DOI</a>
       
-    </ul>
+      
+    </div>
+  </li>
   
-    <h2 class="papers-section-heading">2024</h2>
-    <ul class="papers-list">
+  <li class="paper">
+    <p class="paper-title">Decoding optical aberrations of low-resolution Instruments from PSFs: machine learning and Zernike polynomials perspectives</p>
+    <p class="paper-authors"><b>L. Saunière</b>, Gillard, W., Zoubian, J.</p>
+    <p class="paper-venue">Space {Telescopes} and {Instrumentation} 2024: {Optical}, {Infrared}, and {Millimeter} {Wave} (2024)</p>
+    <div class="paper-links">
       
-        <li class="paper">
-          <div class="paper-title">Performance of the image persistence model for {Euclid} infrared detectors</div>
-          <div class="paper-authors">Kubik, Bogna, Barbier, Remi, Smadja, Gerard, Ferriol, Sylvain, Conseil, Simon, Copin, Yannick, Gillard, William, Dusini, Stefano, Jahnke, Knud, Prieto, Eric, Auricchio, Natalia, Balbi, Evandro, Balestra, Andrea, Battaglia, Paola, Capobianco, Vito, Chary, Ranga, Corcione, Leonardo, Cogato, Fabrizio, Delucchi, Gaia, Zoubian, Julien</div>
-          <div class="paper-venue">, 2024</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.1117/12.3014312">DOI</a>
-              
-              
-            </div>
-          
-        </li>
+        <a class="paper-link" href="https://doi.org/10.1117/12.3018334" target="_blank" rel="noopener">DOI</a>
       
-        <li class="paper">
-          <div class="paper-title">Euclid near infrared spectrometer and photometer instrument {NISP} in space</div>
-          <div class="paper-authors">Gillard, William, Dusini, Stefano, Jahnke, Knud, Prieto, Eric, Auricchio, Natalia, Barbier, Remi, Balbi, Evandro, Balestra, Andrea, Battaglia, Paola, Capobianco, Vito, Chary, Ranga-Ram, Corcione, Leonardo, Cogato, Fabrizio, Delucchi, Gaia, Ferriol, Sylvain, Franceschi, Enrico, Gabarra, Louis, Gianotti, Fulvio, Grupp, Frank, Scodeggio, Marco</div>
-          <div class="paper-venue">, 2024</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.1117/12.3017391">DOI</a>
-              
-              
-            </div>
-          
-        </li>
       
-        <li class="paper">
-          <div class="paper-title">Euclid commissioning results: the near infrared spectrometer and photometer ({NISP}) signal detection chain</div>
-          <div class="paper-authors">Cogato, Fabrizio, Villegas, Eduardo, Barbier, Remi, Dusini, Stefano, Gillard, William, Jahnke, Knud, Auricchio, Natalia, Balbi, Evandro, Balestra, Andrea, Battaglia, Paola, Bonino, Donata, Capobianco, Vito, Chary, Ranga-ram, Conseil, Simon, Corcione, Leonardo, Delucchi, Gaia, Farinelli, Ruben, Ferriol, Sylvain, Franceschi, Enrico, Zoubian, Julien</div>
-          <div class="paper-venue">, 2024</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.1117/12.3017952">DOI</a>
-              
-              
-            </div>
-          
-        </li>
+        <a class="paper-link" href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/13092/3018334/Decoding-optical-aberrations-of-low-resolution-Instruments-from-PSFs/10.1117/12.3018334.full" target="_blank" rel="noopener">Link</a>
       
-        <li class="paper">
-          <div class="paper-title">Decoding optical aberrations of low-resolution {Instruments} from {PSFs}: machine learning and {Zernike} polynomials perspectives</div>
-          <div class="paper-authors">Sauniere, Lucas, Gillard, William, Zoubian, Julien</div>
-          <div class="paper-venue">Space {Telescopes} and {Instrumentation} 2024: {Optical}, {Infrared}, and {Millimeter} {Wave}, 2024</div>
-          
-            <div class="paper-links">
-              
-              <a class="paper-link" href="https://doi.org/10.1117/12.3018334">DOI</a>
-              <a class="paper-link" href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/13092/3018334/Decoding-optical-aberrations-of-low-resolution-Instruments-from-PSFs/10.1117/12.3018334.full">Link</a>
-              
-            </div>
-          
-        </li>
-      
-    </ul>
+    </div>
+  </li>
   
+</ul>
 
+<!-- Conferences & Talks -->
+<h2 class="papers-section-heading">Conferences &amp; Talks</h2>
+<ul class="papers-list">
+  
+  <li class="paper">
+    <p class="paper-title">Decoding optical aberrations of low-resolution instruments from PSFs</p>
+    <p class="paper-authors"><b>L. Saunière</b>, W. Gillard, J. Zoubian</p>
+    <p class="paper-venue">SPIE Astronomical Telescopes + Instrumentation 2024 — oral &amp; poster · Yokohama, Japan</p>
+  </li>
+  
+  <li class="paper">
+    <p class="paper-title">Euclid Consortium Meeting 2023</p>
+    <p class="paper-authors"><b>L. Saunière</b></p>
+    <p class="paper-venue">Euclid Consortium Meeting · Copenhagen, Denmark · June 2023</p>
+  </li>
+  
+  <li class="paper">
+    <p class="paper-title">Euclid France Meeting 2023</p>
+    <p class="paper-authors"><b>L. Saunière</b></p>
+    <p class="paper-venue">Euclid France Meeting · Lyon, France · April 2023</p>
+  </li>
+  
+  <li class="paper">
+    <p class="paper-title">Dark Energy Colloquium 2022</p>
+    <p class="paper-authors"><b>L. Saunière</b></p>
+    <p class="paper-venue">Dark Energy Colloquium · Marseille, France · November 2022</p>
+  </li>
+  
+  <li class="paper">
+    <p class="paper-title">Euclid France Meeting 2022</p>
+    <p class="paper-authors"><b>L. Saunière</b></p>
+    <p class="paper-venue">Euclid France Meeting · Paris, France · October 2022</p>
+  </li>
+  
+</ul>
 
   </main>
 
-  <footer class="site-footer">
-    © Lucas Saunière — built with Jinja2
-  </footer>
+  <footer class="site-footer">© Lucas Saunière</footer>
+
+  <!-- GSAP (load once, globally) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <script src="theme.js"></script>
+  
 </body>
 </html>

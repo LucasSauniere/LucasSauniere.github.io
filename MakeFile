@@ -1,12 +1,15 @@
-.PHONY: build clean serve
+.PHONY: build clean serve watch
 
 BUILD_DIR := src/build
 
 build:
-	python src/build.py
+	uv run src/build.py
 
 clean:
-	rm -rf $(BUILD_DIR) cv/*.pdf
+	rm -rf $(BUILD_DIR) cv/*.pdf cv/*.aux cv/*.log cv/*.fls cv/*.fdb_latexmk
 
 serve: build
-	cd $(BUILD_DIR) && python -m http.server 8000
+	uv run python -m http.server 8000
+
+watch:
+	watchexec -e yml,bib,j2,css,js,html -- make build
