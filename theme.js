@@ -1,24 +1,27 @@
-// Theme toggle + mobile menu
+// ── Theme toggle ─────────────────────────────────────────────
+// Persists preference in localStorage across all pages.
 (function () {
-  const root    = document.documentElement;
-  const btn     = document.getElementById('themeBtn');
-  const menuBtn = document.getElementById('menuBtn');
-  const mobile  = document.getElementById('mobileNav');
+  const STORAGE_KEY = 'ls-theme';
+  const btn = document.getElementById('themeBtn');
 
-  // Initial theme: saved → else system preference
-  let saved = null;
-  try { saved = localStorage.getItem('theme'); } catch (e) {}
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initial = saved || (systemDark ? 'dark' : 'light');
-  root.setAttribute('data-theme', initial);
+  // Apply saved preference (or system preference) immediately
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved ? saved === 'dark' : prefersDark;
 
-  if (btn) btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-  });
+  applyTheme(isDark);
 
-  if (menuBtn && mobile) menuBtn.addEventListener('click', () => {
-    mobile.classList.toggle('open');
-  });
+  // Wire up the button
+  if (btn) {
+    btn.addEventListener('click', function () {
+      const currentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      applyTheme(!currentlyDark);
+      localStorage.setItem(STORAGE_KEY, !currentlyDark ? 'dark' : 'light');
+    });
+  }
+
+  function applyTheme(dark) {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    if (btn) btn.textContent = dark ? '☀️' : '🌙';
+  }
 })();

@@ -1,94 +1,354 @@
 {% extends "base.html.j2" %}
-{% set active = "home" %}
-{% block title %}{{ profile.name }}{% endblock %}
+{% block title %}{{ profile.name }} — {{ profile.title }}{% endblock %}
+{% block body_class %}page-home{% endblock %}
 
 {% block content %}
 
-<!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero-section">
-  <canvas id="starfield"></canvas>
+{# ─── Progress rail (desktop only) ───────────────────────────────── #}
+<nav class="progress-rail" aria-label="Sections">
+  <ol>
+    <li data-rail="launch"     ><a href="#launch"     ><span class="num">01</span><span class="lbl">Launch</span></a></li>
+    <li data-rail="mission"    ><a href="#mission"    ><span class="num">02</span><span class="lbl">Mission</span></a></li>
+    <li data-rail="photon"     ><a href="#photon"     ><span class="num">03</span><span class="lbl">Optics</span></a></li>
+    <li data-rail="problem"    ><a href="#problem"    ><span class="num">04</span><span class="lbl">Problem</span></a></li>
+    <li data-rail="imaging"    ><a href="#imaging"    ><span class="num">05</span><span class="lbl">Imaging</span></a></li>
+    <li data-rail="measurement"><a href="#measurement"><span class="num">06</span><span class="lbl">Measurement</span></a></li>
+    <li data-rail="denoise"    ><a href="#denoise"    ><span class="num">07</span><span class="lbl">Denoise</span></a></li>
+    <li data-rail="network"    ><a href="#network"    ><span class="num">08</span><span class="lbl">Network</span></a></li>
+    <li data-rail="validation" ><a href="#validation" ><span class="num">09</span><span class="lbl">Validation</span></a></li>
+    <li data-rail="focus-ramp" ><a href="#focus-ramp" ><span class="num">10</span><span class="lbl">Focus</span></a></li>
+  </ol>
+</nav>
+
+{# ─── Act 1 — Launch ─────────────────────────────────────────────── #}
+<section id="launch" class="hero-section" data-rail-target="launch">
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
   <div class="hero-text">
+    <p class="hero-kicker">01 · Launch</p>
     <h1 class="hero-name">{{ profile.name }}</h1>
     <p class="hero-title">{{ profile.title }}</p>
-    <p class="hero-affiliation">{{ profile.affiliation }}</p>
-    <div>
-      <a href="research.html" class="hero-btn">View research</a>
-      <a href="papers.html"   class="hero-btn outline">Publications</a>
+    <p class="hero-affiliation">
+      <a href="{{ profile.affiliation_url }}" class="hero-affil-link"
+         target="_blank" rel="noopener">{{ profile.affiliation_full }}</a>
+    </p>
+
+    <div class="hero-actions">
+      <a class="hero-btn" href="#mission">Explore the work</a>
+      <a class="hero-btn outline" href="cv/LucasSauniere_CV.pdf">Download CV</a>
     </div>
+
+    <ul class="hero-socials">
+      <li><a href="{{ profile.links.github }}"   aria-label="GitHub">GitHub</a></li>
+      <li><a href="{{ profile.links.scholar }}"  aria-label="Google Scholar">Scholar</a></li>
+      <li><a href="{{ profile.links.orcid }}"    aria-label="ORCID">ORCID</a></li>
+      <li><a href="{{ profile.links.linkedin }}" aria-label="LinkedIn">LinkedIn</a></li>
+      <li><a href="mailto:{{ profile.email }}"   aria-label="Email">Email</a></li>
+    </ul>
   </div>
-  <div class="scroll-hint">▼ scroll</div>
+
+  <div class="scroll-hint" aria-hidden="true">Scroll</div>
 </section>
 
-<!-- ── PSF SECTION ──────────────────────────────────────────────── -->
-<section id="psf-section" class="scroll-section">
+{# ─── Act 2 — Mission ────────────────────────────────────────────── #}
+<section id="mission" class="scroll-section" data-rail-target="mission">
   <div class="scroll-section-inner">
-    <div class="psf-visual">
-      <canvas id="psfCanvas" width="200" height="200"></canvas>
-      <span class="psf-label">Aberrated PSF</span>
-    </div>
     <div class="scroll-section-text">
-      <h2>Point Spread Functions</h2>
+      <p class="act-kicker">02 · Mission</p>
+      <h2>Euclid, at Lagrange 2.</h2>
       <p>
-        Every star seen through a telescope is blurred by its optics. The
-        shape of that blur — the <em>PSF</em> — encodes the instrument's
-        aberrations: defocus, astigmatism, coma, higher-order wavefront
-        errors. Scroll to simulate correction.
+        ESA's <em>Euclid</em> space telescope maps a third of the sky — roughly
+        1.5 billion galaxies over six years — from the gravitational calm of
+        Lagrange point 2, 1.5 million kilometres from Earth. Its mission: to
+        chart the geometry of the dark Universe.
       </p>
     </div>
-  </div>
-</section>
-
-<!-- ── NETWORK SECTION ──────────────────────────────────────────── -->
-<section id="network-section" class="scroll-section">
-  <div class="scroll-section-inner reverse">
-    <div class="network-visual">
-      <canvas id="networkCanvas" width="360" height="260"></canvas>
-      <span class="psf-label">CNN → Zernike coefficients</span>
-    </div>
-    <div class="scroll-section-text">
-      <h2>Learning the wavefront</h2>
-      <p>
-        A convolutional network takes a noisy PSF cutout and predicts the
-        Zernike coefficients of the underlying wavefront. The layers light
-        up as the signal propagates forward.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ── ZERNIKE SECTION ──────────────────────────────────────────── -->
-<section id="zernike-section" class="scroll-section">
-  <div class="scroll-section-inner">
-    <div class="zernike-visual">
-      <canvas id="zernikeCanvas" width="360" height="240"></canvas>
-      <span class="psf-label">Predicted Zernike amplitudes</span>
-    </div>
-    <div class="scroll-section-text">
-      <h2>Zernike decomposition</h2>
-      <p>
-        The network's output is a compact, physically meaningful vector:
-        defocus (Z₄), astigmatism (Z₅/Z₆), coma ($Z_7$Z₇/Z₈), spherical (Z₁₁)…
-        Each coefficient is an RMS wavefront error in nanometres.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ── EUCLID SECTION (pinned Three.js) ─────────────────────────── -->
-<section id="euclid-section" class="euclid-section">
-  <div class="euclid-pin">
-    <canvas id="euclidCanvas"></canvas>
-    <div class="scroll-section-inner">
-      <div class="scroll-section-text centered">
-        <h2>Applied to Euclid</h2>
-        <p>
-          The method is deployed on ESA's Euclid mission, recovering the PSF
-          across a 0.53 deg² focal plane for weak-lensing cosmology.
-        </p>
-        <div class="hero-links">
-          <a href="research.html" class="hero-btn">Read more</a>
-        </div>
+    <div class="scroll-section-visual">
+      <div id="euclid-scene" class="scene-container" aria-hidden="true">
+        <div class="scene-fallback">Initialising scene…</div>
       </div>
+      <p class="scene-caption">Six-year survey footprint in Mollweide projection, wrapped onto the celestial sphere.</p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 3 — From photon to PSF ──────────────────────────────── #}
+<section id="photon" class="scroll-section" data-rail-target="photon">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">03 · Optics</p>
+      <h2>From photon to PSF.</h2>
+      <p>
+        A star is, for all practical purposes, a point. But no telescope
+        records a point. Light passes through a circular aperture and
+        diffracts; whatever aberrations live in the optics imprint
+        themselves on the wavefront; what lands on the detector is a
+        smeared-out fingerprint called the <em>point spread function</em>.
+      </p>
+      <p>
+        Every source in every image is this shape, scaled by brightness.
+        Recover the PSF and you recover the truth behind the blur.
+      </p>
+    </div>
+    <div class="scroll-section-visual">
+      <div id="photon-scene" class="scene-container scene-wide" aria-hidden="true">
+        <div class="scene-fallback">Computing diffraction…</div>
+      </div>
+      <p class="scene-caption">
+        Plane wave → pupil with wavefront phase → focal-plane PSF.
+        Computed live via FFT of the aperture field.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 4 — The problem ────────────────────────────────────── #}
+<section id="problem" class="scroll-section" data-rail-target="problem">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">04 · The problem</p>
+      <h2>An ideal telescope doesn't exist.</h2>
+      <p>
+        If Euclid were diffraction-limited, the PSF would be a crisp Airy
+        pattern — the mathematical ideal. In practice, thermal gradients
+        flex the optical bench, the primary mirror settles by nanometres
+        after launch, and the spacecraft itself breathes as it orbits the
+        Sun. Each effect smears the PSF in a different direction.
+      </p>
+      <p>
+        A millimetre of astigmatism at the mirror becomes a galaxy-scale
+        ellipticity bias in the final catalogue — exactly the signal we're
+        trying to measure. So we measure the blur instead.
+      </p>
+    </div>
+    <div class="scroll-section-visual">
+      <div id="problem-scene" class="scene-container scene-wide" aria-hidden="true">
+        <div class="scene-fallback">Preparing comparison…</div>
+      </div>
+      <p class="scene-caption">
+        Left: diffraction-limited. Right: as-built, with realistic low-order aberrations.
+        RMS wavefront error scales with scroll progress.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 5 — Imaging (why the PSF matters) ──────────────────── #}
+<section id="imaging" class="scroll-section" data-rail-target="imaging">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">05 · Imaging</p>
+      <h2>Why we care.</h2>
+      <p>
+        Euclid's headline science is <em>weak gravitational lensing</em>:
+        measuring the tiny ellipticities of distant galaxies to map the
+        dark Universe. The cosmological signal is roughly a one-percent
+        shear on each galaxy. The telescope's aberrated PSF imprints a
+        few-percent shape bias of its own — same units, larger amplitude,
+        wrong physics.
+      </p>
+      <p>
+        On the left, a synthetic patch of sky as it really is. On the
+        right, the same patch after the as-built PSF has done its work:
+        the field convolved with the kernel in the middle. Round
+        ellipticals lean the way the PSF leans; small galaxies get
+        merged; point sources blur into the kernel itself.
+      </p>
+      <p>
+        That bias has to be subtracted before any cosmology is done. To
+        subtract it, we have to know the PSF — at every position on the
+        focal plane, at every wavelength, at every time. The rest of the
+        story is how.
+      </p>
+      <p class="scroll-hint">Scroll: aberration ramps up; the field smears.</p>
+    </div>
+    <div class="scroll-section-visual scroll-section-visual-wide">
+      <div id="imaging-scene" class="scene-container scene-wide" aria-hidden="true">
+        <div class="scene-fallback">Convolving field…</div>
+      </div>
+      <p class="scene-caption">
+        True scene → as-built PSF (defocus + astigmatism + coma) → observed scene.
+        Aberration RMS ramps with scroll, in waves of the operating wavelength.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 6 — Measurement ─────────────────────────────────── #}
+<section id="measurement" class="scroll-section" data-rail-target="measurement">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">06 · Measurement</p>
+      <h2>The stars tell us the PSF.</h2>
+      <p>
+        Every exposure contains tens of thousands of stars. Stars are
+        unresolved — their image <em>is</em> the PSF at that field
+        position, modulo photon noise. By collecting stars across the
+        focal plane we build a sparse but global map of the blur.
+      </p>
+      <p>
+        But the PSF varies: with position on the 6×6 CCD mosaic, with
+        wavelength, with time, with the spacecraft's thermal state.
+        No two stars share the same PSF exactly. The map has to
+        interpolate, extrapolate, and denoise — all at once.
+      </p>
+    </div>
+    <div class="scroll-section-visual">
+      <div id="measurement-scene" class="scene-container scene-wide" aria-hidden="true">
+        <div class="scene-fallback">Measuring PSFs…</div>
+      </div>
+      <p class="scene-caption">
+        Full VIS focal plane → single CCD → single stellar PSF.
+        Stars drawn from a realistic luminosity distribution.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 7 — Denoise (DDPM) ───────────────────────────────── #}
+<section id="denoise" class="scroll-section scroll-section-tall" data-rail-target="denoise">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">07 · Denoise</p>
+      <h2>The raw stamps are awful.</h2>
+      <p>
+        The stars we use as PSF probes don't cooperate: most are faint,
+        so the stamps are dominated by shot noise; and VIS samples the
+        PSF below Nyquist, so even at high signal-to-noise the stamp on
+        the detector is a coarse, pixelated rendering of the true
+        continuous PSF. A polynomial fit to those stamps inherits both
+        problems and bakes them into the model.
+      </p>
+      <p>
+        Our pipeline sidesteps that by using a <em>denoising diffusion
+        probabilistic model</em> (DDPM) as a learned prior over PSFs.
+        Given a noisy, undersampled stamp, the DDPM runs the reverse
+        diffusion process for T steps, peeling off variance at each
+        step, until what remains is a clean PSF estimate consistent
+        with everything the network has ever seen during training. Only
+        then does the regressor see the stamp.
+      </p>
+      <p class="scroll-hint">Scroll: noise comes off in T steps.</p>
+    </div>
+    <div class="scroll-section-visual scroll-section-visual-wide">
+      <div id="denoise-scene" class="scene-container scene-tall" aria-hidden="true">
+        <div class="scene-fallback">Loading DDPM trajectory…</div>
+      </div>
+      <p class="scene-caption">
+        Raw stamp (T = 9) → DDPM reverse trajectory → clean stamp (T = 0)
+        → feeds the Inception regressor in the next Act.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 8 — The Network ─────────────────────────────────── #}
+<section id="network" class="scroll-section scroll-section-tall" data-rail-target="network">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">08 · The Network</p>
+      <h2>From PSF stamp to Zernike coefficients.</h2>
+      <p>
+        Once the PSF is denoised, an Inception-style CNN regresses the
+        Zernike coefficients that describe its wavefront. The first layer
+        does the heavy lifting: a small kernel is dragged across the
+        stamp, and at every position it sums the input pixels weighted
+        by the kernel. The output is a feature map that responds where
+        the input matches what the kernel is tuned to detect.
+      </p>
+      <p>
+        An <em>Inception block</em> runs several kernel sizes in parallel
+        — 1×1, 3×3, 5×5 — and concatenates their feature maps, so the
+        network can pick up both fine pixel-level structure and broader
+        shape cues in the same forward pass. Stack a few of those blocks
+        and a regression head, and the network maps a 32-pixel stamp to
+        a handful of Zernike coefficients: defocus (Z₄), astigmatism
+        (Z₅, Z₆), coma (Z₇, Z₈), spherical (Z₁₁).
+      </p>
+      <p class="scroll-hint">Scroll: convolution slides, then the bars fill in.</p>
+    </div>
+    <div class="scroll-section-visual scroll-section-visual-wide">
+      <div id="network-scene" class="scene-container scene-tall" aria-hidden="true">
+        <div class="scene-fallback">Loading network…</div>
+      </div>
+      <p class="scene-caption">
+        Aberrated PSF → 5×5 convolution sliding across the stamp → Inception
+        block (1×1, 3×3, 5×5 in parallel) → predicted Zernike coefficients.
+        White ticks mark the ground-truth values.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 9 — Validation ──────────────────────────────────── #}
+<section id="validation" class="scroll-section scroll-section-tall" data-rail-target="validation">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">09 · Validation</p>
+      <h2>Does it work?</h2>
+      <p>
+        An unvalidated model is a rumour. To trust the network we need to
+        see what it predicts on stars it has <em>never seen</em>, compare
+        those predictions to truth, and check that the residuals are
+        consistent with noise — not only on average, but across every
+        corner of the focal plane.
+      </p>
+      <p>
+        On the right: three panels for a held-out star — truth, prediction,
+        and residual. As training proceeds, the residual collapses toward
+        the photon-noise floor. The map below shows fractional size error
+        ΔT / T across the field. We want it featureless.
+      </p>
+      <p class="scroll-hint">Scroll: watch training converge.</p>
+    </div>
+    <div class="scroll-section-visual scroll-section-visual-wide">
+      <div id="validation-scene" class="scene-container scene-validation" aria-hidden="true">
+        <div class="scene-fallback">Loading validation…</div>
+      </div>
+      <p class="scene-caption">
+        Held-out star, residual to noise floor, and focal-plane size error.
+        Residual colour-stretched ±5% of peak.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ─── Act 10 — Euclid M2 focus ramps ────────────────────────── #}
+<section id="focus-ramp" class="scroll-section scroll-section-tall" data-rail-target="focus-ramp">
+  <div class="scroll-section-inner">
+    <div class="scroll-section-text">
+      <p class="act-kicker">10 · Euclid</p>
+      <h2>Two ramps, one minimum.</h2>
+      <p>
+        Commissioning used two M2 focus ramps. A <strong>coarse</strong>
+        ramp walked Δz<sub>M2</sub> from −50 to +50 µm in steps
+        of 10 µm, three exposures per step — wide enough to bracket the
+        true best focus. A <strong>fine</strong> ramp then refined it
+        from −10 to +10 µm in steps of 2 µm.
+      </p>
+      <p>
+        Because VIS undersamples the PSF, the model recovers only
+        |Z₄|: positive and negative defocus leave
+        near-identical stamps after pixelation. The scatter is
+        therefore a V, not a line. Best focus sits at the vertex.
+      </p>
+      <p>
+        As you scroll, the coarse ramp builds its V; then the fine
+        ramp fills in, tightening the vertex. The recovered best focus
+        is reported against the engineering value both in absolute
+        microns and normalised by the campaign's step size.
+      </p>
+      <p class="scroll-hint">Scroll: coarse ramp, then fine ramp.</p>
+    </div>
+    <div class="scroll-section-visual scroll-section-visual-wide">
+      <div id="focusramp-scene" class="scene-container scene-focusramp" aria-hidden="true">
+        <div class="scene-fallback">Loading focus ramps…</div>
+      </div>
+      <p class="scene-caption">
+        Left: stacked PSF at current Δz<sub>M2</sub>. Right: extracted |Z₄| vs
+        Δz<sub>M2</sub>, V-shape fit, recovered vertex against engineering best focus.
+      </p>
     </div>
   </div>
 </section>
@@ -96,5 +356,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module" src="animations.js"></script>
+<script type="module" src="static/js/animations.js"></script>
 {% endblock %}

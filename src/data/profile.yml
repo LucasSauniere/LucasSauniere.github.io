@@ -1,6 +1,8 @@
 name: "Lucas Saunière"
 title: "Doctor in Optics, Photonics & Image Processing"
-affiliation: "CPPM — Centre de Physique des Particules de Marseille"
+affiliation: "CPPM"
+affiliation_full: "Centre de Physique des Particules de Marseille"
+affiliation_url: https://www.cppm.in2p3.fr/
 location: "Marseille, France"
 email: "lucas.sauniere@ipsa.fr"
 photo: "transp.png"
@@ -54,10 +56,12 @@ skills:
   - "<strong>CAD & FEA:</strong> CATIA V5, Patran/Nastran"
   - "<strong>Languages:</strong> French (native), English (C1), Spanish (beginner)"
 
-social:
+links:
   github: "https://github.com/LucasSauniere"
-  linkedin: ""
-  orcid: ""
+  linkedin: "https://www.linkedin.com/in/lucas-sauniere-27a40b173"
+  orcid: "https://orcid.org/0009-0007-0045-2663"
+  thesis: "#"     # placeholder — fill when the PDF is public
+  scholar: "#"    # placeholder — fill when the Google Scholar profile is public
 
 intro:
   - "I am a <strong>Doctor in Optics, Photonics and Image Processing</strong>, having defended my PhD thesis on January 29th, 2026, at the <a href='https://www.cppm.in2p3.fr/' target='_blank' rel='noopener'>Centre de Physique des Particules de Marseille (CPPM)</a>, France. My work comes at the intersection of <strong>optical instrumentation</strong>, <strong>image processing</strong>, and <strong>machine learning</strong>, with a strong focus on space science applications."

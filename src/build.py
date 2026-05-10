@@ -10,6 +10,19 @@ OUT  = ROOT
 (SRC / "build").mkdir(parents=True, exist_ok=True)
 (ROOT / "cv").mkdir(parents=True, exist_ok=True)
 
+# ── Clean up any legacy assets from previous flat-layout builds ──────
+LEGACY_ROOT_FILES = [
+    "animations.js", "psf.js", "euclid.js", "Euclid.glb", "euclid.glb",
+    "theme.js", "style.css", "scroll-reveal.js", "network.js",
+    "Background_hres.png",
+]
+for fname in LEGACY_ROOT_FILES:
+    p = OUT / fname
+    if p.exists() and p.is_file():
+        p.unlink()
+        print(f"  removed legacy {fname}")
+
+
 def format_authors(raw: str) -> str:
     """Show all authors if ≤10, otherwise show up to and including Sauniere then 'et al.'"""
     if " and " in raw:
@@ -17,7 +30,6 @@ def format_authors(raw: str) -> str:
     else:
         parts = [a.strip() for a in raw.split(",")]
 
-    # Bold my name wherever it appears
     formatted = []
     for author in parts:
         if "Sauniere" in author or "Saunière" in author:
@@ -28,7 +40,6 @@ def format_authors(raw: str) -> str:
     if len(parts) <= 10:
         return ", ".join(formatted)
 
-    # More than 10 authors: truncate after my name
     result = []
     for author, fmt in zip(parts, formatted):
         result.append(fmt)
@@ -37,22 +48,19 @@ def format_authors(raw: str) -> str:
                 result.append("et al.")
             break
     else:
-        # Sauniere not found — show first 3 + et al.
         result = formatted[:3] + (["et al."] if len(parts) > 3 else [])
 
     return ", ".join(result)
 
+
 def normalize_publication(entry: dict) -> dict:
-    """Map raw BibTeX fields to the keys used in templates."""
     venue = entry.get("journal") or entry.get("booktitle") or entry.get("publisher") or ""
     raw_authors = entry.get("author", "")
-    authors = format_authors(raw_authors)
-    # authors = entry.get("author", "").replace(" and ", ", ")
     return {
         "id":       entry.get("ID", ""),
         "type":     entry.get("ENTRYTYPE", ""),
         "title":    entry.get("title", "").strip("{}"),
-        "authors":  authors,
+        "authors":  format_authors(raw_authors),
         "venue":    venue,
         "year":     entry.get("year", ""),
         "doi":      entry.get("doi", ""),
@@ -67,7 +75,6 @@ for yml in (SRC / "data").glob("*.yml"):
     loaded = yaml.safe_load(yml.read_text()) or []
     data[yml.stem] = loaded
 
-# debug: show top-level keys per file
 for k, v in data.items():
     if isinstance(v, dict):
         print(f"  {k}.yml keys: {list(v.keys())}")
@@ -80,7 +87,6 @@ if bib_path.exists():
     with open(bib_path) as f:
         raw = bibtexparser.load(f).entries
     pubs = [normalize_publication(e) for e in raw]
-    # Sort newest first
     pubs.sort(key=lambda p: p.get("year", ""), reverse=True)
     data["publications"] = pubs
 else:
@@ -90,7 +96,7 @@ else:
 env_html = Environment(
     loader=FileSystemLoader(SRC / "templates"),
     autoescape=True,
-    undefined=StrictUndefined,   # fail loudly on missing vars
+    undefined=StrictUndefined,
 )
 page_active = {
     "index.html.j2":    "home",
@@ -104,7 +110,7 @@ for tpl in (SRC / "templates").glob("*.html.j2"):
     name = tpl.name.replace(".j2", "")
     rendered = env_html.get_template(tpl.name).render(
         **data,
-        active=page_active.get(tpl.name, "")
+        active=page_active.get(tpl.name, ""),
     )
     (OUT / name).write_text(rendered)
     print(f"  wrote {name}")
@@ -127,30 +133,29 @@ subprocess.run(
     cwd=SRC / "build",
     check=True,
 )
-
-# Rename the compiled PDF to the desired filename
 cv_src = ROOT / "cv" / "cv.pdf"
 cv_dst = ROOT / "cv" / "LucasSauniere_CV.pdf"
 if cv_src.exists():
     shutil.copy2(cv_src, cv_dst)
-    print(f"  renamed cv.pdf → LucasSauniere_CV.pdf")
+    print("  renamed cv.pdf → LucasSauniere_CV.pdf")
 
-# 6. Copy static assets (if any)
+# 6. Copy static assets recursively → OUT/static/
+static_src = SRC / "static"
+static_dst = OUT / "static"
+if static_src.exists():
+    if static_dst.exists():
+        shutil.rmtree(static_dst)
+    shutil.copytree(static_src, static_dst)
+    print(f"  copied static/ → {static_dst.relative_to(ROOT)}")
+else:
+    print("  (no src/static/ directory, skipping)")
+
+# 7. Legacy src/assets/ support (kept for backwards compat)
 assets_dir = SRC / "assets"
 if assets_dir.is_dir():
     for f in assets_dir.iterdir():
         if f.is_file():
             shutil.copy(f, OUT / f.name)
             print(f"  copied {f.name}")
-else:
-    print("  (no src/assets/ directory, skipping)")
 
 print("Build OK.")
-
-static_src = SRC / "static"
-if static_src.exists():
-    for f in static_src.iterdir():
-        if f.is_file():
-            shutil.copy2(f, OUT / f.name)
-            print(f"  copied static/{f.name}")
-
