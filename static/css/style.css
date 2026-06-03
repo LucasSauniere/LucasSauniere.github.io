@@ -204,6 +204,28 @@ body.page-home .site-footer { color: rgba(255,255,255,0.35); }
   background: #000;
   overflow: hidden;
 }
+
+/* Tall runway variant: the section scrolls for 250vh while .hero-stage stays
+   pinned, so the Earth zoom-out (launch.js) can be scroll-scrubbed. Overflow
+   must stay visible here or the sticky child breaks; clipping lives on the
+   stage instead. */
+.hero-section-tall {
+  min-height: 0;
+  height: 250vh;
+  display: block;
+  overflow: visible;
+}
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.launch-scene { position: absolute; inset: 0; z-index: 1; }
+.launch-scene canvas { display: block; width: 100% !important; height: 100% !important; }
+
 #starfield {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -313,10 +335,16 @@ body.page-home .site-footer { color: rgba(255,255,255,0.35); }
 }
 
 /* ═══════════ ACTS 2–6 (scroll sections) ═══════════ */
+
+/*
+ * Scroll-locked layout: each section is a tall scroll runway so the
+ * browser's normal scroll drives the animation. The inner panel is
+ * sticky — it stays fixed at the top of the viewport while the user
+ * scrolls through the runway; when the runway is exhausted the next
+ * section naturally takes over.
+ */
 .scroll-section {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  padding: 6rem 2rem;
+  height: 250vh;           /* scroll runway — tune per-section via modifier below */
   background: #05060c;
   color: #e6ecff;
   position: relative;
@@ -329,8 +357,17 @@ body.page-home .site-footer { color: rgba(255,255,255,0.35); }
   opacity: 0.6;
 }
 .scroll-section-inner {
-  display: flex; align-items: center;
-  gap: 4rem; max-width: 1040px; width: 100%;
+  /* Sticky panel — stays visible for the full runway */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+
+  display: flex; align-items: center; justify-content: center;
+  gap: 4rem;
+  max-width: 1040px; width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 .scroll-section-inner.reverse { flex-direction: row-reverse; }
 .scroll-section-inner.centered {
@@ -555,8 +592,8 @@ body.page-home .site-footer { color: rgba(255,255,255,0.35); }
 }
 
 .scroll-section-tall {
-  /* Networks deserve a taller scroll runway so blocks have room to appear. */
-  min-height: 160vh;
+  /* Taller runway for acts with longer animations (denoise, network, etc.). */
+  height: 400vh;
 }
 
 .scroll-section-visual-wide {
@@ -587,4 +624,120 @@ body.page-home .site-footer { color: rgba(255,255,255,0.35); }
     /* On mobile we stack truth/pred/residual vertically, so go taller. */
     aspect-ratio: 3 / 4;
   }
+}
+
+/* Extra-long runway for sections that want a "tail" pause
+   between animation completion and the sticky hand-off. */
+/* .scroll-section-xtall { height: 500vh; } */
+
+/* ═══════════ LANDING (home) page ═══════════ */
+/* page-landing keeps the standard themed frosted `main` card; these style its
+   contents: a centred hero, then a grid of cards linking onward. */
+.landing-hero { text-align: center; padding: 0.5rem 0 0; }
+.landing-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 300; letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+}
+.landing-hero .role     { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+.landing-hero .institute { font-size: 0.9rem; color: var(--text-faint); margin-bottom: 1.4rem; }
+.landing-hero .institute a:hover { color: var(--accent); }
+.landing-bio {
+  max-width: 40rem; margin: 0 auto 1.6rem;
+  color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;
+}
+.landing-actions {
+  display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.88rem; letter-spacing: 0.01em;
+  background: rgba(127, 127, 127, 0.05);
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.primary:hover { color: #fff; filter: brightness(1.08); }
+.landing-socials {
+  display: flex; gap: 1.25rem; justify-content: center;
+  list-style: none;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.78rem; letter-spacing: 0.05em;
+}
+.landing-socials a {
+  color: var(--text-muted);
+  border-bottom: 1px solid transparent; padding-bottom: 2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.landing-socials a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+.nav-card {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.nav-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -14px rgba(0, 0, 0, 0.5);
+}
+.nav-card h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+.nav-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; flex: 1; margin: 0; }
+.nav-card-go {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.78rem; color: var(--accent); letter-spacing: 0.04em;
+}
+.nav-card-kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--accent); opacity: 0.85;
+}
+.nav-card.feature {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--bg-card), rgba(74, 122, 184, 0.10));
+}
+.nav-card.feature h2 { font-size: 1.35rem; font-weight: 300; }
+.nav-card.feature p { font-size: 0.9rem; max-width: 44rem; }
+
+/* ═══════════ Sky-coverage act (skysphere.js) ═══════════ */
+.scene-skysphere {
+  max-width: 46rem;
+  aspect-ratio: 16 / 10;
+}
+.skysphere-year {
+  position: absolute;
+  top: 50%; right: 7%;
+  transform: translateY(-50%);
+  font-size: clamp(28px, 5vw, 60px);
+  font-weight: 200; letter-spacing: 6px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 0, 0, 0.6);
+  pointer-events: none; opacity: 0.85; line-height: 1;
+}
+.skysphere-year.flash { animation: skyYearFlash 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes skyYearFlash {
+  0%   { transform: translateY(-50%) scale(1.4); opacity: 0; filter: blur(8px); }
+  40%  { opacity: 1; filter: blur(0); }
+  100% { transform: translateY(-50%) scale(1); opacity: 0.92; filter: blur(0); }
+}
+
+@media (max-width: 620px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skysphere-year.flash { animation: none; }
 }

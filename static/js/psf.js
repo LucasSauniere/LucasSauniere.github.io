@@ -3,7 +3,6 @@
 
 import * as THREE from 'three';
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const photonEl  = document.getElementById('photon-scene');
@@ -183,13 +182,12 @@ function initAct3(container) {
 
   // ─── Scroll progress ───
   let progress = 0;
-  const trigger = ST && ST.create({
-    trigger: '#photon',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const sectionPhoton = document.getElementById('photon');
+  function onScrollPhoton() {
+    if (sectionPhoton && window.getSectionProgress)
+      progress = window.getSectionProgress(sectionPhoton);
+  }
+  window.addEventListener('scroll', onScrollPhoton, { passive: true });
 
   // ─── Render loop ───
   const clock = new THREE.Clock();
@@ -231,7 +229,7 @@ function initAct3(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     stop();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScrollPhoton);
   }, { once: true });
 }
 
@@ -302,14 +300,12 @@ function initAct4(container) {
   // ─── Scroll-driven aberration ramp ───
   let progress = 0;
   let lastRecomputeAt = -1;
-
-  const trigger = ST && ST.create({
-    trigger: '#problem',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const sectionProblem = document.getElementById('problem');
+  function onScrollProblem() {
+    if (sectionProblem && window.getSectionProgress)
+      progress = window.getSectionProgress(sectionProblem);
+  }
+  window.addEventListener('scroll', onScrollProblem, { passive: true });
 
   // Recompute the aberrated PSF only when the scroll progress has shifted
   // enough to matter — FFT is O(N² log N), not free.
@@ -319,15 +315,15 @@ function initAct4(container) {
     lastRecomputeAt = quant;
 
     // Ramp coefficients in radians of wavefront phase.
-    const k = quant; // 0..1
+    const k = quant; // 0..10
     const zernikes = {
       defocus:   0.35 * k,
       astigX:    0.55 * k,
-      astigY:    0.20 * k,
-      comaX:     0.40 * k * k,
-      comaY:     0.15 * k * k,
+      astigY:    0.20 * k * 2,
+      comaX:     0.40 * k * k * 3,
+      comaY:     0.15 * k * k * 2,
       spherical: 0.25 * k * k,
-      trefoilX:  0.20 * k * k,
+      trefoilX:  0.20 * k * k * k,
     };
 
     computePSFInto(aberrField, N, zernikes);
@@ -363,7 +359,7 @@ function initAct4(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     stop();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScrollProblem);
     hud.remove();
   }, { once: true });
 }

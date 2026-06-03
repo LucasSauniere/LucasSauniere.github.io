@@ -8,7 +8,6 @@
 // before any weak-lensing measurement is trustworthy.
 // Pure Canvas 2D.
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const container = document.getElementById('imaging-scene');
 if (container) initImaging(container);
@@ -68,13 +67,12 @@ function initImaging(container) {
 
   // ─── Scroll progress ──────────────────────────────────────────
   let progress = reduceMotion ? 1 : 0;
-  const trigger = ST && ST.create({
-    trigger: '#imaging',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const section = document.getElementById('imaging');
+  function onScroll() {
+    if (section && window.getSectionProgress)
+      progress = window.getSectionProgress(section);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   let raf = 0;
   function tick() {
@@ -89,7 +87,7 @@ function initImaging(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     ro.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
   }, { once: true });
 }
 

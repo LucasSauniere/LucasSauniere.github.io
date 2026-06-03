@@ -2,7 +2,6 @@
 // Canvas 2D rendering, because this view is fundamentally flat and we want
 // crisp pixel-level detail for the final PSF close-up.
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const container = document.getElementById('measurement-scene');
 if (container) initMeasurement(container);
@@ -50,13 +49,12 @@ function initMeasurement(container) {
 
   // ─── Scroll progress ───
   let progress = 0;
-  const trigger = ST && ST.create({
-    trigger: '#measurement',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const section = document.getElementById('measurement');
+  function onScroll() {
+    if (section && window.getSectionProgress)
+      progress = window.getSectionProgress(section);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   let raf = 0;
   let t0 = performance.now();
@@ -81,7 +79,7 @@ function initMeasurement(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     ro.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
   }, { once: true });
 
   /* ──────────────────────────────────────────────────────────

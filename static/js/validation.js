@@ -1,7 +1,6 @@
 // validation.js — Act 7: held-out star, residual, and focal-plane error map.
 // All three panels share the same scroll-driven "training progress" variable.
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const container = document.getElementById('validation-scene');
 if (container) initValidation(container);
@@ -40,13 +39,12 @@ function initValidation(container) {
 
   // ─── Scroll progress ─────────────────────────────────────────
   let progress = 0;
-  const trigger = ST && ST.create({
-    trigger: '#validation',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const section = document.getElementById('validation');
+  function onScroll() {
+    if (section && window.getSectionProgress)
+      progress = window.getSectionProgress(section);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   let raf = 0;
   function tick() {
@@ -66,7 +64,7 @@ function initValidation(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     ro.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
   }, { once: true });
 }
 

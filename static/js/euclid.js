@@ -4,7 +4,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const container = document.getElementById('euclid-scene');
@@ -114,16 +113,12 @@ function initScene(container) {
 
   // ── Scroll-driven progress (0..1 as #mission crosses viewport) ──
   let progress = 0;
-  let trigger = null;
-  if (ST) {
-    trigger = ST.create({
-      trigger: '#mission',
-      start: 'top bottom',
-      end:   'bottom top',
-      scrub: 1,
-      onUpdate: (self) => { progress = self.progress; },
-    });
+  const sectionMission = document.getElementById('mission');
+  function onScroll() {
+    if (sectionMission && window.getSectionProgress)
+      progress = window.getSectionProgress(sectionMission);
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   // ── Render loop ──
   const clock = new THREE.Clock();
@@ -210,7 +205,7 @@ function initScene(container) {
     stop();
     ro.disconnect();
     io.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
     renderer.dispose();
   }, { once: true });
 }

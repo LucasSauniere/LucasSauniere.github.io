@@ -4,7 +4,6 @@
 //   Fine:           Δz ∈ [-10, +10] µm, step  2 µm, 3 obs/step
 // Model output: |Z4| (sign ambiguous due to undersampling) → V-shape.
 
-const ST = window.ScrollTrigger;
 const container = document.getElementById('focusramp-scene');
 if (container) initFocusRamp(container);
 
@@ -60,13 +59,12 @@ function initFocusRamp(container) {
 
   // ─── Scroll ──────────────────────────────────────────────────
   let progress = 0;
-  const trigger = ST && ST.create({
-    trigger: '#focus-ramp',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const section = document.getElementById('focus-ramp');
+  function onScroll() {
+    if (section && window.getSectionProgress)
+      progress = window.getSectionProgress(section);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   let raf = 0;
   function tick() {
@@ -81,7 +79,7 @@ function initFocusRamp(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     ro.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
   }, { once: true });
 }
 

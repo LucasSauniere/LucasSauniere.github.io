@@ -12,6 +12,85 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 const DPR = Math.min(2, window.devicePixelRatio || 1);
 
 /* ────────────────────────────────────────────────────────────────
+   SMOOTH SCROLL — lerp wheel/keyboard input so scrollY changes
+   continuously across frames. This makes scene-module scrubbing
+   (via getSectionProgress) feel buttery instead of stepped, and
+   it glides across section boundaries where sticky panels hand
+   off to the next one.
+
+   Touch devices are skipped: native inertia is already smooth,
+   and intercepting touchmove would break momentum scrolling.
+   ──────────────────────────────────────────────────────────────── */
+(function smoothScroll() {
+  if (reduceMotion) return;
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  if (isTouch) return;
+
+  let target  = window.scrollY;
+  let current = window.scrollY;
+  const EASE  = 0.12;    // 0.08 = buttery, 0.20 = snappier
+  const MAX_STEP = 120;  // cap per-wheel delta so one flick can't skip a section
+
+  function maxScroll() {
+    return document.documentElement.scrollHeight - window.innerHeight;
+  }
+  function clampTarget() {
+    const max = maxScroll();
+    if (target < 0)   target = 0;
+    if (target > max) target = max;
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) return; // leave pinch-zoom alone
+    e.preventDefault();
+    const delta = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), MAX_STEP);
+    target += delta;
+    clampTarget();
+  }, { passive: false });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const h = window.innerHeight;
+    const map = {
+      PageDown:   h * 0.9,
+      PageUp:    -h * 0.9,
+      ArrowDown:  60,
+      ArrowUp:   -60,
+      ' ':        h * 0.9,
+      End:        9e9,
+      Home:      -9e9,
+    };
+    if (e.key in map) {
+      // Don't hijack keys while typing in an input.
+      const tag = (e.target && e.target.tagName) || '';
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || e.target.isContentEditable) return;
+      e.preventDefault();
+      target += map[e.key];
+      clampTarget();
+    }
+  });
+
+  // If something external scrolls the page (rail click, scrollIntoView,
+  // hash change, back/forward), re-adopt the real scrollY as our target.
+  window.addEventListener('scroll', () => {
+    if (Math.abs(window.scrollY - current) > 2) {
+      target  = window.scrollY;
+      current = window.scrollY;
+    }
+  }, { passive: true });
+
+  function tick() {
+    current += (target - current) * EASE;
+    if (Math.abs(target - current) < 0.5) current = target;
+    if (Math.round(current) !== Math.round(window.scrollY)) {
+      window.scrollTo(0, current);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+/* ────────────────────────────────────────────────────────────────
    ACT 1 — Launch: starfield + hero text, with parallax on scroll.
    ──────────────────────────────────────────────────────────────── */
 (function act1() {
@@ -104,27 +183,31 @@ const DPR = Math.min(2, window.devicePixelRatio || 1);
     ST.create({
       trigger: '#launch',
       start: 'top top',
-      end: 'bottom top',
+      // Fade the hero text over roughly the first viewport of scrolling, so
+      // the Earth zoom-out (driven by getSectionProgress over the full runway)
+      // becomes the focus.
+      end: '+=100%',
       scrub: true,
       onUpdate: self => {
         const p = self.progress;
-        gsap.set('.hero-text',     { opacity: 1 - p * 1.1, y: -p * 40 });
-        gsap.set('.scroll-hint',   { opacity: Math.max(0, 1 - p * 3) });
-        gsap.set('.hero-vignette', { opacity: 1 + p * 0.3 });
+        gsap.set('.hero-text',          { opacity: 1 - p * 1.1, y: -p * 40 });
+        gsap.set('#launch .scroll-hint', { opacity: Math.max(0, 1 - p * 3) });
+        gsap.set('.hero-vignette',      { opacity: 1 + p * 0.3 });
       },
     });
   });
 })();
 
 /* ────────────────────────────────────────────────────────────────
-   ACTS 2–6 — placeholder entrance animations.
-   Each one gets a subtle fade-in-and-up as it enters the viewport,
-   so the page has a consistent feel until the real scenes land.
+   ACTS 2–10 — entrance animations.
+   Sections are now tall scroll-runways with a sticky inner panel.
+   We trigger the fade-in when the section top crosses the viewport
+   top (i.e. the moment the sticky panel locks into view).
    ──────────────────────────────────────────────────────────────── */
 (function entranceAnimations() {
   if (reduceMotion) return;
   const sections = document.querySelectorAll(
-    '#mission, #photon, #problem, #imaging, #measurement, #denoise, #network, #validation, #focus-ramp'
+    '#skysphere, #photon, #problem, #imaging, #measurement, #denoise, #network, #validation, #focus-ramp'
   );
   sections.forEach(sec => {
     const kicker = sec.querySelector('.act-kicker');
@@ -140,7 +223,8 @@ const DPR = Math.min(2, window.devicePixelRatio || 1);
       y: 28, opacity: 0, duration: 0.9, ease: 'power2.out', stagger: 0.1,
       scrollTrigger: {
         trigger: sec,
-        start: 'top 72%',
+        // Fire when section top reaches the viewport top (sticky kicks in).
+        start: 'top top',
         toggleActions: 'play none none reverse',
       },
     });
@@ -175,7 +259,8 @@ const DPR = Math.min(2, window.devicePixelRatio || 1);
     });
   });
 
-  // Smooth scroll on rail click (respects reduced-motion).
+  // Rail click: do a plain scrollTo; the smoothScroll loop will
+  // adopt the new scrollY as its target and ease us there.
   rail.addEventListener('click', e => {
     const a = e.target.closest('a');
     if (!a) return;
@@ -184,21 +269,22 @@ const DPR = Math.min(2, window.devicePixelRatio || 1);
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
-    target.scrollIntoView({
+    const top = target.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top,
       behavior: reduceMotion ? 'auto' : 'smooth',
-      block: 'start',
     });
   });
 })();
 
 /* ────────────────────────────────────────────────────────────────
    Lazy-load scene modules for later acts.
-   These are stubs for now — the real modules land in chunks 2–5.
-   Wrapped in try/catch so a missing file never breaks the page.
+   Trigger once when the section top enters the viewport.
    ──────────────────────────────────────────────────────────────── */
 (function lazySceneLoaders() {
   const lazy = [
-    { sel: '#mission',     mod: './euclid.js'      },
+    { sel: '#launch',      mod: './launch.js'      },
+    { sel: '#skysphere',   mod: './skysphere.js'   },
     { sel: '#photon',      mod: './psf.js'         },
     { sel: '#problem',     mod: './psf.js'         },
     { sel: '#imaging',     mod: './imaging.js'     },
@@ -225,48 +311,17 @@ const DPR = Math.min(2, window.devicePixelRatio || 1);
 })();
 
 /* ────────────────────────────────────────────────────────────────
-   Snap to section starts on scroll release. Keeps each Act fully
-   visible — the user lands at an Act's top instead of stranding on
-   a gap between two Acts. Skipped under prefers-reduced-motion.
+   Scroll-progress helper.
+   Each scene module can call getSectionProgress(sectionEl) → 0..1
+   to drive its animation from the scroll position within the runway.
+   Exposed on window so modules loaded via dynamic import can reach it.
    ──────────────────────────────────────────────────────────────── */
-(function sectionSnap() {
-  if (reduceMotion) return;
-  const ids = ['launch', 'mission', 'photon', 'problem', 'imaging',
-               'measurement', 'denoise', 'network', 'validation', 'focus-ramp'];
-
-  function positions() {
-    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const out = [];
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      out.push(Math.min(1, Math.max(0, el.offsetTop / max)));
-    }
-    return out;
-  }
-
-  ST.create({
-    start: 0,
-    end: 'max',
-    snap: {
-      // Recomputed each call so resize / lazy layout shifts don't desync.
-      snapTo: (value) => {
-        const ps = positions();
-        if (!ps.length) return value;
-        let best = ps[0], bestD = Math.abs(value - best);
-        for (const p of ps) {
-          const d = Math.abs(value - p);
-          if (d < bestD) { bestD = d; best = p; }
-        }
-        return best;
-      },
-      duration: { min: 0.25, max: 0.6 },
-      delay: 0.12,
-      ease: 'power2.inOut',
-      directional: false,
-    },
-  });
-})();
+window.getSectionProgress = function getSectionProgress(section) {
+  const runway = section.offsetHeight - window.innerHeight;
+  if (runway <= 0) return 0;
+  const scrolled = window.scrollY - section.offsetTop;
+  return Math.min(1, Math.max(0, scrolled / runway));
+};
 
 /* Final refresh once everything has had a chance to size. */
 window.addEventListener('load', () => ST.refresh());

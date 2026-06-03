@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mirror Sphere — Euclid Tiled Footprint</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; background: #000; overflow: hidden; height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #fff; user-select: none;
+  }
+  #info {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(0,0,0,0.55); padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; max-width: 80vw; line-height: 1.4; pointer-events: none;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  #info b { color: #9ecbff; }
+  #info .date { color: #ffd58a; font-variant-numeric: tabular-nums; }
+  #ui {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(0,0,0,0.55); padding: 8px; border-radius: 8px;
+    font-size: 13px; border: 1px solid rgba(255,255,255,0.1);
+    display: flex; gap: 6px; flex-wrap: wrap; max-width: 60vw; justify-content: flex-end;
+  }
+  #ui .sep { width: 1px; background: rgba(255,255,255,0.15); margin: 0 2px; }
+  #ui button {
+    background: rgba(255,255,255,0.06); color: #ddd;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 10px; border-radius: 6px; font: inherit; cursor: pointer;
+  }
+  #ui button.active { background: #9ecbff; color: #000; border-color: #9ecbff; }
+  #ui button:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* #timeline {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    width: min(70vw, 700px); background: rgba(0,0,0,0.55);
+    padding: 8px 12px; border-radius: 8px; font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  #timeline .bar {
+    position: relative; height: 4px; background: rgba(255,255,255,0.1);
+    border-radius: 2px; margin-top: 6px; overflow: hidden;
+  }
+  #timeline .fill {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+    background: linear-gradient(90deg, #6f42c1, #ffd58a);
+    transition: width 0.1s linear;
+  }
+  #timeline .ticks {
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+    display: flex; pointer-events: none;
+  }
+  #timeline .ticks > div {
+    flex: 1; border-right: 1px solid rgba(255,255,255,0.18);
+  }
+  #timeline .ticks > div:last-child { border-right: 0; }
+  #status {
+    position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.7); color: #9ecbff; padding: 6px 12px;
+    border-radius: 6px; font-size: 12px; border: 1px solid rgba(255,255,255,0.15);
+    max-width: 80vw; text-align: center;
+  } */
+  #year-label {
+    position: absolute;
+    top: 8%; right: 8%;
+    transform: translateY(-50%);
+    font-size: clamp(24px, 8vw, 48px);
+    font-weight: 200;
+    letter-spacing: 6px;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    opacity: 0.85;
+    line-height: 1;
+  }
+  #year-label.flash {
+    animation: yearFlash 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes yearFlash {
+    0%   { transform: translateY(-50%) scale(1.4); opacity: 0; filter: blur(8px); }
+    40%  { opacity: 1; filter: blur(0); }
+    100% { transform: translateY(-50%) scale(1); opacity: 0.92; filter: blur(0); }
+  }
+  #scroll-hint {
+    position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.55); font-size: 12px; letter-spacing: 1px;
+    pointer-events: none; transition: opacity 0.4s;
+  }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+
+<div id="info">
+  <b>Euclid Footprint over Mirror Sphere</b><br/>
+  Scroll to advance through the survey, year by year.
+  <br/>
+  <span class="date" id="date">—</span>
+</div>
+
+<div id="ui">
+  <button id="mode-mirror" class="active">Mirror</button>
+  <button id="mode-globe">Globe</button>
+
+  <span class="sep"></span>
+
+  <button id="mode-drag" class="active">Click &amp; drag</button>
+  <button id="mode-hover">Hover</button>
+
+  <span class="sep"></span>
+
+  <button id="invert-x" disabled>Invert X</button>
+  <button id="invert-y" disabled>Invert Y</button>
+</div>
+
+<div id="year-label">Year 1</div>
+<div id="scroll-hint">scroll ↓ for next year</div>
+
+<!-- <div id="timeline">
+  <span id="frame-label">no frames</span>
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+    <div class="ticks" id="ticks"></div>
+  </div>
+</div> -->
+
+<div id="status">Booting…</div>
+
+<script src="https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ========== Config ========== */
+const TILES_DIR    = 'data/frames_tiled';
+const MILKYWAY_TIF = 'data/images/spherex1.tif';
+
+/* Year-based animation tuning */
+const SECONDS_PER_YEAR  = 0;   // duration to animate through one year
+const KEYFRAMES_PER_YEAR = 2;   // crossfade keyframes sampled per year
+const WHEEL_STEP_THRESHOLD = 150; // wheel delta needed to advance/rewind a year
+const WHEEL_COOLDOWN_MS    = 500;// minimum gap between year-jumps
+
+/* White "leading edge" tuning */
+const EDGE_OPACITY = 1;
+const EDGE_BOOST   = 2;
+
+/* Idle auto-spin */
+const TARGET_SPIN = 0.15;
+const IDLE_DELAY  = 1500;
+
+/* ========== DOM ========== */
+const statusEl     = document.getElementById('status');
+const dateEl       = document.getElementById('date');
+const fillEl       = document.getElementById('fill');
+const frameLabelEl = document.getElementById('frame-label');
+const ticksEl      = document.getElementById('ticks');
+const yearLabelEl  = document.getElementById('year-label');
+const scrollHintEl = document.getElementById('scroll-hint');
+const btnDrag      = document.getElementById('mode-drag');
+const btnHover     = document.getElementById('mode-hover');
+const btnInvertX   = document.getElementById('invert-x');
+const btnInvertY   = document.getElementById('invert-y');
+
+const setStatus  = (m) => { console.log('[status]', m); statusEl.textContent = m; statusEl.style.display = ''; };
+const hideStatus = ()  => { statusEl.style.display = 'none'; };
+
+/* ========== Scene ========== */
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 4.5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const maxTextureSize = renderer.capabilities.maxTextureSize;
+console.log('Max texture size:', maxTextureSize);
+
+const sphereGeo = new THREE.SphereGeometry(1.0, 256, 256);
+const sphereMat = new THREE.MeshStandardMaterial({
+  color: 0xffffff, metalness: 1.0, roughness: 0.05, envMapIntensity: 1.0,
+});
+const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+scene.add(sphere);
+scene.add(new THREE.AmbientLight(0x404060, 0.5));
+
+/* ========== TIFF loader ========== */
+async function loadTIFF(url) {
+  setStatus('Downloading ' + url + ' …');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status} fetching ${url}`);
+  const buf = await r.arrayBuffer();
+  setStatus('Decoding TIFF…');
+  const ifds = UTIF.decode(buf);
+  if (!ifds.length) throw new Error('No images in TIFF');
+  UTIF.decodeImage(buf, ifds[0]);
+  const rgba = UTIF.toRGBA8(ifds[0]);
+  const w = ifds[0].width, h = ifds[0].height;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const img = c.getContext('2d').createImageData(w, h);
+  img.data.set(rgba);
+  c.getContext('2d').putImageData(img, 0, 0);
+  return c;
+}
+
+/* ========== Mollweide → Equirectangular ========== */
+function mollweideToEquirectangular(srcCanvas, outW, outH) {
+  setStatus(`Reprojecting Mollweide → Equirect (${outW}×${outH})…`);
+  const srcW = srcCanvas.width, srcH = srcCanvas.height;
+  const src = srcCanvas.getContext('2d').getImageData(0, 0, srcW, srcH).data;
+  const out = document.createElement('canvas');
+  out.width = outW; out.height = outH;
+  const outCtx = out.getContext('2d');
+  const dst = outCtx.createImageData(outW, outH);
+  const d = dst.data;
+  const INV_PI = 1 / Math.PI;
+  function solveTheta(phi) {
+    if (Math.abs(phi) > Math.PI/2 - 1e-6) return Math.sign(phi)*Math.PI/2;
+    const target = Math.PI*Math.sin(phi);
+    let theta = phi;
+    for (let i=0;i<8;i++){
+      const f = 2*theta + Math.sin(2*theta) - target;
+      const fp= 2 + 2*Math.cos(2*theta);
+      const dlt = f/fp; theta -= dlt;
+      if (Math.abs(dlt)<1e-9) break;
+    }
+    return theta;
+  }
+  const sample = (sx, sy) => {
+    if (sx<0||sx>=srcW||sy<0||sy>=srcH) return [0,0,0,255];
+    const x0=Math.floor(sx), y0=Math.floor(sy);
+    const x1=Math.min(x0+1,srcW-1), y1=Math.min(y0+1,srcH-1);
+    const fx=sx-x0, fy=sy-y0;
+    const i00=(y0*srcW+x0)*4, i10=(y0*srcW+x1)*4,
+          i01=(y1*srcW+x0)*4, i11=(y1*srcW+x1)*4;
+    const w00=(1-fx)*(1-fy), w10=fx*(1-fy), w01=(1-fx)*fy, w11=fx*fy;
+    return [
+      src[i00  ]*w00+src[i10  ]*w10+src[i01  ]*w01+src[i11  ]*w11,
+      src[i00+1]*w00+src[i10+1]*w10+src[i01+1]*w01+src[i11+1]*w11,
+      src[i00+2]*w00+src[i10+2]*w10+src[i01+2]*w01+src[i11+2]*w11,
+      src[i00+3]*w00+src[i10+3]*w10+src[i01+3]*w01+src[i11+3]*w11,
+    ];
+  };
+  for (let y=0;y<outH;y++){
+    const phi = (0.5 - (y+0.5)/outH)*Math.PI;
+    const theta = solveTheta(phi);
+    const cT = Math.cos(theta), sT = Math.sin(theta);
+    const sy = (1 - sT)*0.5*srcH;
+    for (let x=0;x<outW;x++){
+      const lambda = ((x+0.5)/outW - 0.5)*2*Math.PI;
+      const xN = lambda*cT*INV_PI;
+      const sx = (xN+1)*0.5*srcW;
+      const o = (y*outW+x)*4;
+      if (xN < -1 || xN > 1) { d[o]=0;d[o+1]=0;d[o+2]=0;d[o+3]=255; continue; }
+      const [r,g,b,a] = sample(sx, sy);
+      d[o]=r; d[o+1]=g; d[o+2]=b; d[o+3]=a;
+    }
+  }
+  outCtx.putImageData(dst, 0, 0);
+  return out;
+}
+
+/* ========== State ========== */
+let milkyWayCanvas = null;
+let composite      = null;
+let compositeCtx   = null;
+let universeTex    = null;
+let globeTex       = null;
+let cubeRT         = null;
+
+let manifest       = null;
+
+const tileCache    = new Map();
+const tileInFlight = new Map();
+
+let edgeA, edgeCtxA, edgeB, edgeCtxB;
+let edgeScratch, edgeScratchCtx;
+
+/* Year groups: array of { label, frameIndices, keyframes } */
+let yearGroups = [];
+
+/* Animation state */
+let currentYear     = 0;     // index into yearGroups
+let yearAnimT       = 0;     // 0..1 progress through current year
+let yearAnimComplete = false;
+
+let kfA = -1, kfB = -1;
+let loadingA = -1, loadingB = -1;
+
+let compositeDirty = true;
+
+/* Wheel handling */
+let wheelAccum   = 0;
+let lastYearJumpTime = 0;
+
+/* ========== Tile loading (lazy + cached) ========== */
+function loadTile(fname) {
+  if (tileCache.has(fname))    return Promise.resolve(tileCache.get(fname));
+  if (tileInFlight.has(fname)) return tileInFlight.get(fname);
+  const p = new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload  = () => { tileCache.set(fname, img); tileInFlight.delete(fname); resolve(img); };
+    img.onerror = ()  => { tileInFlight.delete(fname); reject(new Error(`tile ${fname} failed`)); };
+    img.src = `${TILES_DIR}/${fname}`;
+  });
+  tileInFlight.set(fname, p);
+  return p;
+}
+
+async function ensureFrameLoaded(frameIdx) {
+  const recs = manifest.frames[frameIdx];
+  if (!recs) return;
+  await Promise.all(recs.map(r => loadTile(r.f).catch(() => null)));
+}
+
+function whiteSilhouette(img) {
+  const ts = manifest.tile;
+  edgeScratchCtx.globalCompositeOperation = 'source-over';
+  edgeScratchCtx.clearRect(0, 0, ts, ts);
+  for (let p = 0; p < EDGE_BOOST; p++) edgeScratchCtx.drawImage(img, 0, 0);
+  edgeScratchCtx.globalCompositeOperation = 'source-in';
+  edgeScratchCtx.fillStyle = '#fff';
+  edgeScratchCtx.fillRect(0, 0, ts, ts);
+  edgeScratchCtx.globalCompositeOperation = 'source-over';
+  return edgeScratch;
+}
+
+function rebuildEdgeOn(ctx, canvas, frameIdx) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const recs = manifest.frames[frameIdx];
+  if (!recs) return;
+  const ts = manifest.tile;
+  for (const r of recs) {
+    const img = tileCache.get(r.f);
+    if (!img) continue;
+    const sil = whiteSilhouette(img);
+    ctx.drawImage(sil, r.x * ts, r.y * ts);
+  }
+}
+
+/* ========== Year grouping ========== */
+function extractYear(dateStr) {
+  if (!dateStr) return null;
+  const m = String(dateStr).match(/(\d{4})/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function setupYearGroups() {
+  yearGroups = [];
+  const N = manifest.n_frames;
+  if (N === 0) return;
+
+  // Try to group by calendar year extracted from manifest.dates
+  const dates = manifest.dates || [];
+  const yearByFrame = [];
+  let allHaveYear = true;
+  for (let i = 0; i < N; i++) {
+    const y = extractYear(dates[i]);
+    if (y == null) { allHaveYear = false; break; }
+    yearByFrame.push(y);
+  }
+
+  const buckets = new Map(); // year -> [frameIndices]
+  if (allHaveYear) {
+    for (let i = 0; i < N; i++) {
+      const y = yearByFrame[i];
+      if (!buckets.has(y)) buckets.set(y, []);
+      buckets.get(y).push(i);
+    }
+    const sortedYears = Array.from(buckets.keys()).sort((a, b) => a - b);
+    sortedYears.forEach((y, idx) => {
+      yearGroups.push({
+        label: `Year ${idx + 1}`,
+        calendarYear: y,
+        frameIndices: buckets.get(y),
+      });
+    });
+  } else {
+    // Fallback: divide into 6 equal segments
+    const N_YEARS = 6;
+    const per = Math.ceil(N / N_YEARS);
+    for (let y = 0; y < N_YEARS; y++) {
+      const frames = [];
+      for (let i = y * per; i < Math.min((y + 1) * per, N); i++) frames.push(i);
+      if (frames.length) {
+        yearGroups.push({
+          label: `Year ${y + 1}`,
+          calendarYear: null,
+          frameIndices: frames,
+        });
+      }
+    }
+  }
+
+  // Pre-compute keyframe samples per year (so the A/B crossfade only has to
+  // crossfade between a small number of stops within each year).
+  for (const g of yearGroups) {
+    const fr = g.frameIndices;
+    const stops = Math.min(KEYFRAMES_PER_YEAR, fr.length);
+    const kfs = [];
+    if (stops <= 1) {
+      kfs.push(fr[0]);
+    } else {
+      for (let i = 0; i < stops; i++) {
+        kfs.push(fr[Math.round(i * (fr.length - 1) / (stops - 1))]);
+      }
+    }
+    g.keyframes = kfs;
+  }
+}
+
+// function buildTimelineTicks() {
+//   ticksEl.innerHTML = '';
+//   for (let i = 0; i < yearGroups.length; i++) {
+//     ticksEl.appendChild(document.createElement('div'));
+//   }
+// }
+
+function flashYearLabel() {
+  const g = yearGroups[currentYear];
+  if (!g) return;
+  yearLabelEl.textContent = g.label;
+  yearLabelEl.classList.remove('flash');
+  // Force reflow so the animation restarts every time.
+  void yearLabelEl.offsetWidth;
+  yearLabelEl.classList.add('flash');
+}
+
+/* ========== Edge slot loading ========== */
+async function requestEdgeSlot(slot, frameIdx) {
+  if (slot === 'A') {
+    if (kfA === frameIdx || loadingA === frameIdx) return;
+    loadingA = frameIdx;
+    await ensureFrameLoaded(frameIdx);
+    if (loadingA !== frameIdx) return;
+    rebuildEdgeOn(edgeCtxA, edgeA, frameIdx);
+    kfA = frameIdx;
+    loadingA = -1;
+  } else {
+    if (kfB === frameIdx || loadingB === frameIdx) return;
+    loadingB = frameIdx;
+    await ensureFrameLoaded(frameIdx);
+    if (loadingB !== frameIdx) return;
+    rebuildEdgeOn(edgeCtxB, edgeB, frameIdx);
+    kfB = frameIdx;
+    loadingB = -1;
+  }
+  compositeDirty = true;
+}
+
+let blendT = 0;
+
+/* ========== Animation tick ========== */
+function tickAnim(dt) {
+  if (!manifest || yearGroups.length === 0) return;
+
+  const g = yearGroups[currentYear];
+  if (!g) return;
+
+  // Auto-advance through current year.
+  if (!yearAnimComplete) {
+    yearAnimT += dt / SECONDS_PER_YEAR;
+    if (yearAnimT >= 1) {
+      yearAnimT = 1;
+      yearAnimComplete = true;
+    }
+    compositeDirty = true;
+  }
+
+  const kfs = g.keyframes;
+  const stops = kfs.length;
+  const pos = yearAnimT * (stops - 1);
+  const lo = Math.max(0, Math.min(stops - 1, Math.floor(pos)));
+  const hi = Math.max(0, Math.min(stops - 1, lo + 1));
+  const a = kfs[lo];
+  const b = kfs[hi];
+
+  if (a !== kfA && a !== loadingA) requestEdgeSlot('A', a);
+  if (b !== kfB && b !== loadingB) requestEdgeSlot('B', b);
+
+  const newBlend = (lo === hi) ? 0 : (pos - lo);
+  if (newBlend !== blendT) { blendT = newBlend; compositeDirty = true; }
+
+  // updateTimelineUI();
+}
+
+// function updateTimelineUI() {
+//   if (!manifest || yearGroups.length === 0) return;
+//   const g = yearGroups[currentYear];
+//   const kfs = g.keyframes;
+//   const pos = yearAnimT * (kfs.length - 1);
+//   const nearest = Math.round(pos);
+//   const frameIdx = kfs[Math.max(0, Math.min(kfs.length - 1, nearest))];
+//   dateEl.textContent = manifest.dates ? (manifest.dates[frameIdx] || '') : '';
+//   const totalYears = yearGroups.length;
+//   frameLabelEl.textContent =
+//     `${g.label}${g.calendarYear ? ' (' + g.calendarYear + ')' : ''}` +
+//     `  ·  ${currentYear + 1}/${totalYears}` +
+//     `  ·  frame ${frameIdx + 1}/${manifest.n_frames}`;
+//   const overall = (currentYear + yearAnimT) / totalYears;
+//   fillEl.style.width = `${overall * 100}%`;
+// }
+
+function updateComposite() {
+  if (!composite || !milkyWayCanvas) return;
+  compositeCtx.clearRect(0, 0, composite.width, composite.height);
+  compositeCtx.drawImage(milkyWayCanvas, 0, 0, composite.width, composite.height);
+
+  if (edgeA && edgeB && kfA >= 0 && kfB >= 0) {
+    if (kfA === kfB) {
+      compositeCtx.globalAlpha = EDGE_OPACITY;
+      compositeCtx.drawImage(edgeA, 0, 0, composite.width, composite.height);
+    } else {
+      compositeCtx.globalAlpha = (1 - blendT) * EDGE_OPACITY;
+      compositeCtx.drawImage(edgeA, 0, 0, composite.width, composite.height);
+      compositeCtx.globalAlpha = blendT * EDGE_OPACITY;
+      compositeCtx.drawImage(edgeB, 0, 0, composite.width, composite.height);
+    }
+    compositeCtx.globalAlpha = 1;
+  } else if (edgeA && kfA >= 0) {
+    compositeCtx.globalAlpha = EDGE_OPACITY;
+    compositeCtx.drawImage(edgeA, 0, 0, composite.width, composite.height);
+    compositeCtx.globalAlpha = 1;
+  }
+
+  if (universeTex) universeTex.needsUpdate = true;
+  if (globeTex)    globeTex.needsUpdate    = true;
+  if (cubeRT && universeTex && surfaceMode === 'mirror')
+    cubeRT.fromEquirectangularTexture(renderer, universeTex);
+}
+
+/* ========== Year navigation ========== */
+function jumpToYear(idx) {
+  idx = Math.max(0, Math.min(yearGroups.length - 1, idx));
+  if (idx === currentYear) {
+    // Same year requested again — replay its animation from the start.
+    yearAnimT = 0;
+    yearAnimComplete = false;
+    flashYearLabel();
+    compositeDirty = true;
+    return;
+  }
+  currentYear = idx;
+  yearAnimT = 0;
+  yearAnimComplete = false;
+  compositeDirty = true;
+  flashYearLabel();
+  // Hide the scroll hint after the first interaction.
+  if (scrollHintEl) scrollHintEl.style.opacity = '0';
+}
+
+/* ========== Background prefetch ========== */
+async function prefetchYearKeyframesBackground() {
+  if (!manifest || yearGroups.length === 0) return;
+  const all = new Set();
+  for (const g of yearGroups) {
+    for (const idx of g.keyframes) {
+      const recs = manifest.frames[idx];
+      if (!recs) continue;
+      for (const r of recs) all.add(r.f);
+    }
+  }
+  const list = Array.from(all);
+  const BATCH = 16;
+  for (let i = 0; i < list.length; i += BATCH) {
+    await Promise.all(list.slice(i, i + BATCH).map(f => loadTile(f).catch(() => null)));
+  }
+  console.log(`[prefetch] ${list.length} year-keyframe tiles cached`);
+}
+
+/* ========== Manifest fetch ========== */
+async function fetchManifest() {
+  const r = await fetch(`${TILES_DIR}/manifest.json`);
+  if (!r.ok) throw new Error(`manifest HTTP ${r.status}`);
+  return r.json();
+}
+
+/* ========== Pipeline ========== */
+(async () => {
+  try {
+    const [srcCanvas, mf] = await Promise.all([
+      loadTIFF(MILKYWAY_TIF),
+      fetchManifest().catch((e) => { console.warn('No manifest:', e.message); return null; }),
+    ]);
+    manifest = mf;
+
+    const W = Math.min(maxTextureSize, manifest ? manifest.width : 4096);
+    const H = W / 2;
+    milkyWayCanvas = mollweideToEquirectangular(srcCanvas, W, H);
+
+    composite = document.createElement('canvas');
+    composite.width = W; composite.height = H;
+    compositeCtx = composite.getContext('2d');
+
+    universeTex = new THREE.CanvasTexture(composite);
+    universeTex.mapping = THREE.EquirectangularReflectionMapping;
+    universeTex.colorSpace = THREE.SRGBColorSpace;
+    universeTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    cubeRT = new THREE.WebGLCubeRenderTarget(2048, {
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter,
+      magFilter: THREE.LinearFilter,
+    });
+    cubeRT.texture.colorSpace = THREE.SRGBColorSpace;
+
+    globeTex = new THREE.CanvasTexture(composite);
+    globeTex.colorSpace = THREE.SRGBColorSpace;
+    globeTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    sphere.rotation.y = Math.PI / 2;
+
+    scene.background = cubeRT.texture;
+    sphereMat.envMap = cubeRT.texture;
+    sphereMat.needsUpdate = true;
+
+    if (manifest) {
+      edgeA = document.createElement('canvas');
+      edgeA.width  = manifest.width;
+      edgeA.height = manifest.height;
+      edgeCtxA = edgeA.getContext('2d');
+
+      edgeB = document.createElement('canvas');
+      edgeB.width  = manifest.width;
+      edgeB.height = manifest.height;
+      edgeCtxB = edgeB.getContext('2d');
+
+      edgeScratch = document.createElement('canvas');
+      edgeScratch.width = edgeScratch.height = manifest.tile;
+      edgeScratchCtx = edgeScratch.getContext('2d');
+
+      setupYearGroups();
+      // buildTimelineTicks();
+      console.log(`[years] ${yearGroups.length} year groups:`,
+        yearGroups.map(g => `${g.label}${g.calendarYear ? ' (' + g.calendarYear + ')' : ''}: ${g.frameIndices.length} frames, ${g.keyframes.length} kfs`));
+
+      setStatus(`Loading first year (${yearGroups.length} years total)…`);
+
+      // Pre-paint the first two keyframes of year 0 so the opening frame isn't blank.
+      const firstGroup = yearGroups[0];
+      const firstA = firstGroup.keyframes[0];
+      const firstB = firstGroup.keyframes[Math.min(1, firstGroup.keyframes.length - 1)];
+      await ensureFrameLoaded(firstA);
+      rebuildEdgeOn(edgeCtxA, edgeA, firstA);
+      kfA = firstA;
+      if (firstB !== firstA) {
+        await ensureFrameLoaded(firstB);
+        rebuildEdgeOn(edgeCtxB, edgeB, firstB);
+      }
+      kfB = firstB;
+
+      currentYear = 0;
+      yearAnimT = 0;
+      yearAnimComplete = false;
+      blendT = 0;
+      compositeDirty = true;
+      flashYearLabel();
+      // updateTimelineUI();
+
+      hideStatus();
+      prefetchYearKeyframesBackground();
+    } else {
+      compositeDirty = true;
+      setStatus('No footprint manifest — showing Milky Way only.');
+      yearLabelEl.style.display = 'none';
+      scrollHintEl.style.display = 'none';
+      setTimeout(hideStatus, 2500);
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus('Error: ' + err.message);
+  }
+})();
+
+/* ========== Controls ========== */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.05;
+controls.enableZoom = false; controls.enablePan = false;
+controls.minDistance = 1.5; controls.maxDistance = 10;
+
+const ORIGIN    = new THREE.Vector3(0, 0, 0);
+const spherical = new THREE.Spherical();
+let hoverAz     = 0;
+let hoverPolar  = Math.PI / 2;
+let hoverRadius = camera.position.length();
+let invertX     = false;
+let invertY     = true;
+
+let mode = 'drag';
+function setMode(m) {
+  if (m === mode) return;
+  mode = m;
+  controls.enabled = (m === 'drag');
+  if (m === 'hover') {
+    spherical.setFromVector3(camera.position);
+    hoverRadius = spherical.radius;
+    hoverPolar  = spherical.phi;
+    hoverAz     = spherical.theta;
+  }
+  btnDrag.classList.toggle('active',  m === 'drag');
+  btnHover.classList.toggle('active', m === 'hover');
+  btnInvertX.disabled = (m !== 'hover');
+  btnInvertY.disabled = (m !== 'hover');
+}
+btnDrag.addEventListener('click',  () => setMode('drag'));
+btnHover.addEventListener('click', () => setMode('hover'));
+btnInvertX.addEventListener('click', () => {
+  invertX = !invertX;
+  btnInvertX.classList.toggle('active', invertX);
+});
+btnInvertY.addEventListener('click', () => {
+  invertY = !invertY;
+  btnInvertY.classList.toggle('active', invertY);
+});
+
+let surfaceMode = 'mirror';
+const btnMirror = document.getElementById('mode-mirror');
+const btnGlobe  = document.getElementById('mode-globe');
+
+function setSurfaceMode(m) {
+  if (m === surfaceMode) return;
+  surfaceMode = m;
+
+  if (m === 'mirror') {
+    sphereMat.envMap            = cubeRT.texture;
+    sphereMat.emissiveMap       = null;
+    sphereMat.emissive.set(0x000000);
+    sphereMat.emissiveIntensity = 0;
+    sphereMat.metalness         = 1.0;
+    sphereMat.roughness         = 0.05;
+    if (universeTex) cubeRT.fromEquirectangularTexture(renderer, universeTex);
+  } else {
+    sphereMat.envMap            = null;
+    sphereMat.emissiveMap       = globeTex;
+    sphereMat.emissive.set(0xffffff);
+    sphereMat.emissiveIntensity = 1.0;
+    sphereMat.metalness         = 0.0;
+    sphereMat.roughness         = 1.0;
+  }
+  sphereMat.color.set(0xffffff);
+  sphereMat.needsUpdate = true;
+
+  btnMirror.classList.toggle('active', m === 'mirror');
+  btnGlobe .classList.toggle('active', m === 'globe');
+}
+
+btnMirror.addEventListener('click', () => setSurfaceMode('mirror'));
+btnGlobe .addEventListener('click', () => setSurfaceMode('globe'));
+
+const pointer = { x: 0, y: 0 };
+window.addEventListener('mousemove', (e) => {
+  pointer.x = (e.clientX / window.innerWidth)  * 2 - 1;
+  pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
+});
+
+/* Wheel → snap to next/previous year, with delta-accumulation + cooldown so a
+   single trackpad swipe doesn't blow through several years at once. */
+window.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  if (!manifest || yearGroups.length === 0) return;
+
+  // Reset accumulator if direction reversed.
+  if (Math.sign(e.deltaY) !== Math.sign(wheelAccum) && wheelAccum !== 0) {
+    wheelAccum = 0;
+  }
+  wheelAccum += e.deltaY;
+
+  const now = performance.now();
+  while (Math.abs(wheelAccum) >= WHEEL_STEP_THRESHOLD &&
+         now - lastYearJumpTime >= WHEEL_COOLDOWN_MS) {
+    const dir = Math.sign(wheelAccum);
+    const target = currentYear + dir;
+    if (target < 0 || target >= yearGroups.length) {
+      // Clamp at the ends — drain the accumulator so it doesn't pile up.
+      wheelAccum = 0;
+      break;
+    }
+    jumpToYear(target);
+    wheelAccum -= dir * WHEEL_STEP_THRESHOLD;
+    lastYearJumpTime = now;
+  }
+  lastMouseMove = now;
+}, { passive: false });
+
+/* Optional: arrow keys also navigate years. */
+window.addEventListener('keydown', (e) => {
+  if (!manifest || yearGroups.length === 0) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+    if (currentYear < yearGroups.length - 1) jumpToYear(currentYear + 1);
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    if (currentYear > 0) jumpToYear(currentYear - 1);
+    e.preventDefault();
+  } else if (e.key === ' ') {
+    // Replay current year.
+    jumpToYear(currentYear);
+    e.preventDefault();
+  }
+});
+
+/* ========== Idle auto-spin ========== */
+let lastMouseMove = performance.now();
+let idleSpin     = 0;
+
+window.addEventListener('pointermove', () => { lastMouseMove = performance.now(); });
+window.addEventListener('pointerdown', () => { lastMouseMove = performance.now(); });
+
+/* ========== Animation loop ========== */
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt  = clock.getDelta();
+  const now = performance.now();
+
+  tickAnim(dt);
+
+  if (compositeDirty) {
+    updateComposite();
+    compositeDirty = false;
+  }
+
+  const idle   = now - lastMouseMove > IDLE_DELAY;
+  const target = idle ? TARGET_SPIN : 0;
+  idleSpin += (target - idleSpin) * Math.min(1, dt * 3);
+  sphere.rotation.y += idleSpin * dt;
+
+  if (mode === 'hover') {
+    const xSign = invertX ?  1 : -1;
+    const ySign = invertY ? -1 :  1;
+    const targetAz    = xSign * pointer.x * Math.PI;
+    const targetPolar = THREE.MathUtils.clamp(
+      Math.PI / 2 + ySign * pointer.y * Math.PI * 0.4, 0.15, Math.PI - 0.15
+    );
+    hoverAz    += (targetAz    - hoverAz)    * 0.08;
+    hoverPolar += (targetPolar - hoverPolar) * 0.08;
+    spherical.set(hoverRadius, hoverPolar, hoverAz);
+    camera.position.setFromSpherical(spherical);
+    camera.lookAt(ORIGIN);
+  } else {
+    controls.update();
+  }
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>

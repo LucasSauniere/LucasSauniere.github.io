@@ -100,6 +100,7 @@ env_html = Environment(
 )
 page_active = {
     "index.html.j2":    "home",
+    "phd.html.j2":      "phd",
     "about.html.j2":    "about",
     "research.html.j2": "research",
     "papers.html.j2":   "papers",
@@ -139,13 +140,41 @@ if cv_src.exists():
     shutil.copy2(cv_src, cv_dst)
     print("  renamed cv.pdf → LucasSauniere_CV.pdf")
 
-# 6. Copy static assets recursively → OUT/static/
+# 6. Copy static assets → OUT/static/.
+#    Lightweight assets (js/css/3d/images) are wiped and recopied each build.
+#    Large input-data dirs (PRESERVE_DATA_DIRS, e.g. the 13k-file Euclid
+#    footprint tiles) are PRESERVED at the destination instead: rmtree-ing
+#    thousands of files races with macOS .DS_Store/Spotlight activity
+#    ("Directory not empty" on rmtree) and recopying them is slow. They are
+#    copied once when the destination is missing; to refresh them, delete
+#    static/<name>/ by hand and rebuild.
+PRESERVE_DATA_DIRS = {"euclid"}
 static_src = SRC / "static"
 static_dst = OUT / "static"
 if static_src.exists():
-    if static_dst.exists():
-        shutil.rmtree(static_dst)
-    shutil.copytree(static_src, static_dst)
+    static_dst.mkdir(parents=True, exist_ok=True)
+    # Clear the destination, but never touch preserved data dirs.
+    for child in static_dst.iterdir():
+        if child.name in PRESERVE_DATA_DIRS:
+            continue
+        if child.is_dir():
+            shutil.rmtree(child)
+        else:
+            child.unlink()
+    # Copy each top-level entry from src/static.
+    for child in static_src.iterdir():
+        dst_child = static_dst / child.name
+        if child.name in PRESERVE_DATA_DIRS:
+            if dst_child.exists():
+                print(f"  preserved existing static/{child.name}/")
+            else:
+                shutil.copytree(child, dst_child)
+                print(f"  copied data dir static/{child.name}/ (first time)")
+            continue
+        if child.is_dir():
+            shutil.copytree(child, dst_child)
+        else:
+            shutil.copy2(child, dst_child)
     print(f"  copied static/ → {static_dst.relative_to(ROOT)}")
 else:
     print("  (no src/static/ directory, skipping)")

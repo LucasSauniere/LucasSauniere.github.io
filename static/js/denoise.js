@@ -9,7 +9,6 @@
 // step labels T = K-1 → 0 and a highlighted current step.
 // Pure Canvas 2D.
 
-const ST = window.ScrollTrigger;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const container = document.getElementById('denoise-scene');
 if (container) initDenoise(container);
@@ -48,13 +47,12 @@ function initDenoise(container) {
   if (fallback) fallback.style.display = 'none';
 
   let progress = reduceMotion ? 1 : 0;
-  const trigger = ST && ST.create({
-    trigger: '#denoise',
-    start: 'top bottom',
-    end:   'bottom top',
-    scrub: 1,
-    onUpdate: (s) => { progress = s.progress; },
-  });
+  const section = document.getElementById('denoise');
+  function onScroll() {
+    if (section && window.getSectionProgress)
+      progress = window.getSectionProgress(section);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   let raf = 0;
   function tick() {
@@ -67,7 +65,7 @@ function initDenoise(container) {
   window.addEventListener('pagehide', () => {
     cancelAnimationFrame(raf);
     ro.disconnect();
-    trigger && trigger.kill();
+    window.removeEventListener('scroll', onScroll);
   }, { once: true });
 }
 
